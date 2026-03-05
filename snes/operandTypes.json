@@ -1,0 +1,46 @@
+{
+    "Absolute": {
+        "size": 3,
+        "parts": [ "Offset" ]
+    },
+    "AbsoluteLong": {
+        "size": 4,
+        "parts": [ "Address" ]
+    },
+    "Direct": {
+        "size": 2,
+        "parts": [ "Byte" ]
+    },
+    "Immediate": {
+        "size": 2,
+        "parts": [ "Word|Byte" ]
+    },
+    "Implied": {
+        "size": 1,
+        "parts": []
+    },
+    "Accumulator": {
+        "size": 1,
+        "parts": []
+    },
+    "Label": {
+        "size": 2,
+        "parts": [ "Word" ]
+    },
+    "BankPair": {
+        "size": 3,
+        "parts": [ "Byte", "Byte" ]
+    },
+    "PCRelative": {
+        "size": 2,
+        "parts": [ "Relative" ]
+    },
+    "PCRelativeLong": {
+        "size": 3,
+        "parts": [ "Word" ]
+    },
+    "Byte": {
+        "size": 2,
+        "parts": [ "Byte" ]
+    }
+}

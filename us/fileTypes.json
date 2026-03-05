@@ -1,0 +1,51 @@
+{
+    "Bitmap": {
+        "extension": "bin",
+        "type": "Bitmap"
+    },
+    "Tilemap": {
+        "extension": "map",
+        "header": 2,
+        "type": "Tilemap"
+    },
+    "Tileset": {
+        "extension": "set",
+        "type": "Tileset"
+    },
+    "Spritemap": {
+        "extension": "spm",
+        "type": "Spritemap"
+    },
+    "Music": {
+        "extension": "bgm",
+        "type": "Music"
+    },
+    "Sound": {
+        "extension": "sfx",
+        "header": -2,
+        "type": "Sound"
+    },
+    "Unknown": {
+        "extension": "unk",
+        "type": "Unknown"
+    },
+    "Patch": {
+        "extension": "patch.asm",
+        "type": "Patch",
+        "isPatch": true
+    },
+    "Assembly": {
+        "extension": "asm",
+        "type": "Assembly",
+        "isBlock": true
+    },
+    "Palette": {
+        "extension": "pal",
+        "type": "Palette"
+    },
+    "Meta17": {
+        "extension": "dmp",
+        "header": 4,
+        "type": "Meta17"
+    }
+}

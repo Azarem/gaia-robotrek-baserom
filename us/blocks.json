@@ -1,0 +1,13 @@
+{
+    "system": {
+        "chunk_008000": { 
+            "parts": {
+                "emulation_mode_reset_008000": { "start": 32768, "end": 32781, "type": "Code" },
+                "native_mode_nmi_00800D": { "start": 32781, "end": 32785, "type": "Code" },
+                "native_mode_irq_008011": { "start": 32785, "end": 32789, "type": "Code" },
+                "native_mode_cop_008015": { "start": 32789, "end": 32793, "type": "Code" },
+                "native_mode_brk_008019": { "start": 32793, "end": 65242, "type": "Code" }
+            }
+        }
+    }
+}

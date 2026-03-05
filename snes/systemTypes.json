@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Byte",
+    "size": 1,
+    "description": "An 8-bit unsigned integer."
+  },
+  {
+    "name": "Word",
+    "size": 2,
+    "description": "A 16-bit unsigned integer."
+  },
+  {
+    "name": "Offset",
+    "size": 2,
+    "isPointer": true,
+    "description": "A 16-bit unsigned integer used to represent an offset in memory. Bank is implied"
+  },
+  {
+    "name": "Address",
+    "size": 3,
+    "isPointer": true,
+    "description": "A 24-bit unsigned integer used to represent an address in memory or a file."
+  },
+  {
+    "name": "Relative",
+    "size": 1,
+    "isPointer": true,
+    "isRelative": true,
+    "isSigned": true,
+    "description": "A 8-bit signed integer used to represent a relative offset in memory. Bank is implied"
+  },
+  {
+    "name": "RelativeLong",
+    "size": 2,
+    "isPointer": true,
+    "isRelative": true,
+    "isSigned": true,
+    "description": "A 16-bit signed integer used to represent a relative offset in memory. Bank is implied"
+  },
+  {
+    "name": "Direct",
+    "size": 1,
+    "isPointer": true,
+    "description": "A 8-bit unsigned integer used to represent a direct offset in memory. Bank is implied"
+  }
+]
