@@ -1,2 +1,82 @@
 {
+    "unk1": {
+        "discriminator": 0,
+        "delimiter": 255,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "@unk8", "@unk11" ]
+    },
+    "unk2": {
+        "parent": "unk1",
+        "discriminator": 254,
+        "types": [ "Byte", "@unk8" ]
+    },
+    "unk3": {
+        "parent": "unk1",
+        "discriminator": 253,
+        "types": [ "Byte", "Byte", "Byte", "@unk8" ]
+    },
+    "unkFC": {
+        "parent": "unk1",
+        "discriminator": 252,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "@unk8", "@unk11" ]
+    },
+    "unk4": {
+        "discriminator": 0,
+        "delimiter": 255,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "@unk8", "@Binary" ]
+    },
+    "unk5": {
+        "parent": "unk4",
+        "discriminator": 254,
+        "types": [ "@unk8", "@Binary" ]
+    },
+    "unk6": {
+        "parent": "unk4",
+        "discriminator": 253,
+        "types": [ "Address", "@Binary" ]
+    },
+    "unk7": {
+        "parent": "unk4",
+        "discriminator": 252,
+        "types": [ "Byte", "Byte", "Byte", "@unk8" ]
+    },
+    "unk8": {
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Code" ]
+    },
+    "unk9": {
+        "delimiter": 65535,
+        "types": [ "Word", "Word" ]
+    },
+    "unk10": {
+        "delimiter": 65535,
+        "types": [ "Word", "Byte" ]
+    },
+    "unk11": {
+        "types": [ "part0", "part1", "part3" ]
+    },
+    "part0": {
+        "null": 65535,
+        "types": [ "@Binary", "Byte", "Byte" ]
+    },
+    "part1": {
+        "discriminator": 0,
+        "discriminatorLogic": "&",
+        "null": 65535,
+        "types": [ "Word", "Word", "Byte", "Word" ]
+    },
+    "part2": {
+        "parent": "part1",
+        "discriminator": 128,
+        "types": [ "Byte", "Byte", "Word" ]
+    },
+    "part3": {
+        "discriminator": 2,
+        "discriminatorLogic": "&",
+        "null": 65535,
+        "types": [ "Byte", "Byte", "Byte", "@Binary" ]
+    },
+    "part4": {
+        "parent": "part3",
+        "discriminator": 128,
+        "types": [ "Byte", "Byte", "Byte", "Byte" ]
+    }
 }

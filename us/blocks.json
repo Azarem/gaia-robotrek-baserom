@@ -6,7 +6,73 @@
                 "native_mode_nmi_00800D": { "start": 32781, "end": 32785, "type": "Code" },
                 "native_mode_irq_008011": { "start": 32785, "end": 32789, "type": "Code" },
                 "native_mode_cop_008015": { "start": 32789, "end": 32793, "type": "Code" },
-                "native_mode_brk_008019": { "start": 32793, "end": 65242, "type": "Code" }
+                "native_mode_brk_008019": { "start": 32793, "end": 64714, "type": "Code" },
+                "addr_list_00FCCA": { "start": 64714, "end": 64924, "type": "Address" },
+                "addr_list_00FD9C": { "start": 64924, "end": 65242, "type": "@Binary" }
+            }
+        },
+        "chunk_028000": {
+            "parts": {
+                "addr_list_028000": { "start": 163840, "end": 190890, "type": "&unk1" },
+                "code_02E9AA": { "start": 190890, "end": 196455, "type": "Code" }
+            }
+        },
+        "chunk_038000": {
+            "parts": {
+                "addr_list_038000": { "start": 229376, "end": 242966, "type": "&unk4" },
+                "code_list_03B516": { "start": 242966, "end": 259473, "type": "&Code" }
+            }
+        },
+        "chunk_048000": {
+            "parts": {
+                "code_048000": { "start": 294912, "end": 304056, "type": "Code" },
+                "code_04A3B8": { "start": 304056, "end": 304260, "type": "unk9" },
+                "code_04A484": { "start": 304260, "end": 304289, "type": "Code" },
+                "code_04A4A1": { "start": 304289, "end": 304519, "type": "unk10" },
+                "spc_04A587": { "start": 304519, "end": 307543, "type": "Binary" },
+                "code_04B157": { "start": 307543, "end": 307687, "type": "Code" },
+                "string_04B1E7": { "start": 307687, "end": 325026, "type": "String" },
+                "string_list_04F5A2": { "start": 325026, "end": 327604, "type": "&String" }
+            }
+        },
+        "chunk_058000": {
+            "parts": {
+                "unk8_058000": { "start": 360448, "end": 392407, "type": "unk8" }
+            }
+        },
+        "chunk_068000": {
+            "parts": {
+                "unk8_068000": { "start": 425984, "end": 456662, "type": "unk8" }
+            }
+        },
+        "chunk_078000": {
+            "parts": {
+                "unk8_078000": { "start": 491520, "end": 521141, "type": "unk8" }
+            }
+        },
+        "chunk_088000": {
+            "parts": {
+                "unk8_088000": { "start": 557056, "end": 587039, "type": "unk8" }
+            }
+        },
+        "chunk_098000": {
+            "parts": {
+                "unk8_098000": { "start": 622592, "end": 652409, "type": "unk8" }
+            }
+        },
+        "chunk_0A8000": {
+            "parts": {
+                "unk8_0A8000": { "start": 688128, "end": 720051, "type": "unk8" }
+            }
+        },
+        "chunk_0B8000": {
+            "parts": {
+                "unk8_0B8000": { "start": 753664, "end": 785829, "type": "unk8" }
+            }
+        },
+        "chunk_0C8000": {
+            "parts": {
+                "unk8_0C8000": { "start": 819200, "end": 847596, "type": "unk8" }
             }
         }
     }

@@ -28,11 +28,12 @@
         "clean-install": "rm -rf node_modules && rm -rf package-lock.json && npm install",
         "publish": "tsdown && npm publish --access public",
         "extract": "node src/index.ts extract",
+        "extract-jp": "node src/index.ts extract-jp",
         "extract-strings": "node src/extractStrings.ts",
         "rebuild": "node src/index.ts rebuild"
     },
     "dependencies": {
-        "@gaialabs/core": "^0.2.2"
+        "@gaialabs/core": "^0.2.14"
     },
     "devDependencies": {
         "@types/node": "^20.19.29",
