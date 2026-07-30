@@ -22,12 +22,12 @@
     "unk4": {
         "discriminator": 0,
         "delimiter": 255,
-        "types": [ "Byte", "Byte", "Byte", "Byte", "@unk8", "@Binary" ]
+        "types": [ "Byte", "Byte", "Byte", "Byte", "@unk8", "@unk11" ]
     },
     "unk5": {
         "parent": "unk4",
         "discriminator": 254,
-        "types": [ "@unk8", "@Binary" ]
+        "types": [ "@unk8", "@unk11" ]
     },
     "unk6": {
         "parent": "unk4",
@@ -78,5 +78,156 @@
         "parent": "part3",
         "discriminator": 128,
         "types": [ "Byte", "Byte", "Byte", "Byte" ]
+    },
+    "meta<>": {
+        "discriminator": 0,
+        "delimiter": 0
+    },
+    "bitmap": {
+        "parent": "meta<>",
+        "discriminator": 128,
+        "types": [ "Byte", "Byte", "Byte", "!Binary" ]
+    },
+    "palette": {
+        "parent": "meta<>",
+        "discriminator": 64,
+        "types": [ "Byte", "Byte", "Byte", "!Binary" ]
+    },
+    "tileset": {
+        "parent": "meta<>",
+        "discriminator": 32,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "!Binary" ]
+    },
+    "tilemap": {
+        "parent": "meta<>",
+        "discriminator": 16,
+        "types": [ "Byte", "!Binary" ]
+    },
+    "meta08": {
+        "parent": "meta<>",
+        "discriminator": 8,
+        "types": [ "Byte", "Byte", "Byte" ]
+    },
+    "meta04": {
+        "parent": "meta<>",
+        "discriminator": 4,
+        "types": [ "Byte", "Byte", "Byte" ]
+    },
+    "music": {
+        "parent": "meta<>",
+        "discriminator": 2,
+        "types": [ "Byte", "Byte", "!Binary" ]
+    },
+    "meta01": {
+        "parent": "meta<>",
+        "discriminator": 1,
+        "types": [ "Byte", "Word", "!Binary" ]
+    },
+    "mapMeta": {
+        "delimiter": 8481,
+        "types": [ "Word", "meta<>" ]
+    },
+    "sprite_set": {
+        "delimiter": 65535,
+        "types": [ "Word", "&sprite_group" ]
+    },
+    "sprite_set2": {
+        "delimiter": 65535,
+        "types": [ "Word", "Word", "Word", "&sprite_group2" ]
+    },
+    "sprite_group": {
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "sprite_part" ]
+    },
+    "sprite_group2": {
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "sprite_part2" ]
+    },
+    "sprite_part": {
+        "discriminator": 0,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Word" ]
+    },
+    "sprite_part2": {
+        "discriminator": 0,
+        "types": [ "Byte", "Byte", "Byte", "Word" ]
+    },
+    "sprite_end": {
+        "parent": "sprite_part",
+        "discriminator": 65535,
+        "types": [ ]
+    },
+    "sprite_end2": {
+        "parent": "sprite_part2",
+        "discriminator": 65535,
+        "types": [ ]
+    },
+    "unk12": {
+        "discriminator": 6,
+        "delimiter": 255,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte" ]
+    },
+    "unk12_2": {
+        "parent": "unk12",
+        "discriminator": 0,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "&unk14", "Byte", "Byte", "Byte" ]
+    },
+    "unk13": {
+        "types": [ "Word", "Word", "Word", "Word", "Word", "Byte" ]
+    },
+    "unk14": {
+        "discriminator": 0,
+        "types": [ "Word", "Word", "Byte", "Byte", "Byte" ]
+    },
+    "unk14_end": {
+        "parent": "unk14",
+        "discriminator": 65535,
+        "types": []
+    },
+    "unk15": {
+        "delimiter": 255,
+        "types": [ "Byte", "&Code" ]
+    },
+    "unk16": {
+        "types": [ "Word", "Word", "Byte", "Byte", "Word", "Word", "Word", "Word", "Word", "Word" ]
+    },
+    "unk17": {
+        "types": [ "Byte", "Byte" ]
+    },
+    "unk18": {
+        "types": [ "Byte", "Word" ]
+    },
+    "unk19": {
+        "delimiter": 65535,
+        "types": [ "Word", "Word", "Byte", "Byte", "Byte", "Byte" ]
+    },
+    "unk20": {
+        "delimiter": 65535,
+        "types": [ "Word", "Byte", "Byte", "Byte", "Byte" ]
+    },
+    "unk21": {
+        "types": [ "unk24[C]", "unk22[1]" ]
+    },
+    "unk22": {
+        "discriminator": 0,
+        "discriminatorLogic": "&",
+        "types": [ "Word" ]
+    },
+    "unk23": {
+        "parent": "unk22",
+        "discriminator": 1,
+        "types": [ "Word", "Word", "Word" ]
+    },
+    "unk24": {
+        "discriminator": 0,
+        "discriminatorSize": 2,
+        "types": [ "&Code" ]
+    },
+    "unk25": {
+        "parent": "unk24",
+        "discriminator": 65535,
+        "types": []
+    },
+    "unk26": {
+        "parent": "unk24",
+        "discriminator": 1,
+        "types": []
     }
 }

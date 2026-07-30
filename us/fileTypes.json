@@ -1,20 +1,42 @@
 {
     "Bitmap": {
         "extension": "bin",
+        "type": "Bitmap",
+        "compressed": true
+    },
+    "RawBitmap": {
+        "extension": "raw.bin",
         "type": "Bitmap"
     },
     "Tilemap": {
         "extension": "map",
         "header": 2,
-        "type": "Tilemap"
+        "type": "Tilemap",
+        "compressed": true
     },
     "Tileset": {
         "extension": "set",
-        "type": "Tileset"
+        "type": "Tileset",
+        "compressed": true
     },
     "Spritemap": {
-        "extension": "spm",
-        "type": "Spritemap"
+        "extension": "sprite.asm",
+        "type": "Spritemap",
+        "compressed": true,
+        "struct": "~&sprite_set",
+        "base": 0
+    },
+    "RawSpritemap": {
+        "extension": "raw.sprite.asm",
+        "type": "Spritemap",
+        "struct": "~&sprite_set",
+        "base": 0
+    },
+    "RawSpritemap2": {
+        "extension": "raw.sprite2.asm",
+        "type": "Spritemap",
+        "struct": "~&sprite_set2",
+        "base": 0
     },
     "Music": {
         "extension": "bgm",
