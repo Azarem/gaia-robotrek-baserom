@@ -229,5 +229,32 @@
         "parent": "unk24",
         "discriminator": 1,
         "types": []
+    },
+    "unk27": {
+        "types": [ "Byte", "Word", "Word" ]
+    },
+    "unk28": {
+        "delimiter": 255,
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte" ]
+    },
+    "unk29": {
+        "discriminator": 3,
+        "discriminatorLogic": "&",
+        "types": [ "Word", "Word" ]
+    },
+    "unk30": {
+        "parent": "unk29",
+        "discriminator": 128,
+        "types": [ "Word", "Offset" ]
+    },
+    "unk31": {
+        "delimiter": 65535,
+        "types": [ "Word", "&Binary" ]
+    },
+    "unk32": {
+        "types": [ "Word", "Word" ]
+    },
+    "unk33": {
+        "types": [ "Word", "Word", "Word" ]
     }
 }
