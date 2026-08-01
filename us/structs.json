@@ -256,5 +256,22 @@
     },
     "unk33": {
         "types": [ "Word", "Word", "Word" ]
+    },
+    "unk34": {
+        "types": [ "Word", "Word", "Word", "Offset", "Offset" ]
+    },
+    "unk35": {
+        "types": [ "&String$2", "Byte", "Byte", "Byte" ]
+    },
+    "unk36": {
+        "delimiter": 0,
+        "types": [ "Byte", "&Binary", "Word", "Byte", "&Binary" ]
+    },
+    "unk38": {
+        "delimiter": 0,
+        "types": [ "Byte", "Byte", "Byte" ]
+    },
+    "unk39": {
+        "types": [ "Byte", "Byte", "Byte", "Byte" ]
     }
 }

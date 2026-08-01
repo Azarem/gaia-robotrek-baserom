@@ -65,9 +65,8 @@
         "extension": "pal",
         "type": "Palette"
     },
-    "Meta17": {
-        "extension": "dmp",
-        "header": 4,
-        "type": "Meta17"
+    "Binary": {
+        "extension": "raw",
+        "type": "Binary"
     }
 }
