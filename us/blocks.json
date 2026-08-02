@@ -112,10 +112,16 @@
         "chunk_038000": {
             "parts": {
                 "addr_list_038000": { "start": 229376, "end": 236651, "type": "&unk4" },
-                "code_list_039C6B": { "start": 236651, "end": 238457, "type": "&Code" },
+                "code_list_039C6B": { "start": 236651, "end": 237904, "type": "&Code" },
+                "code_03A150": { "start": 237904, "end": 238457, "type": "Code" },
                 "unk15_03A379": { "start": 238457, "end": 240800, "type": "unk15" },
                 "code_list_03ACA0": { "start": 240800, "end": 242966, "type": "&Code" },
-                "code_list_03B516": { "start": 242966, "end": 259473, "type": "&Code" },
+                "code_list_03B516": { "start": 242966, "end": 243449, "type": "&Code" },
+                "code_03B6F9": { "start": 243449, "end": 243463, "type": "Code" },
+                "code_03B707": { "start": 243463, "end": 248353, "type": "Code" },
+                "word_03CA21": { "start": 248353, "end": 248361, "type": "Word" },
+                "word_03CA29": { "start": 248361, "end": 248827, "type": "Word" },
+                "unk37_03CBFB": { "start": 248827, "end": 259473, "type": "unk37" },
                 "unk16_03F591": { "start": 259473, "end": 260931, "type": "unk16" },
                 "code_03FB43": { "start": 260931, "end": 261369, "type": "Code" }
             }
@@ -138,7 +144,9 @@
                 "code_04B157": { "start": 307543, "end": 307687, "type": "Code" },
                 "string_04B1E7": { "start": 307687, "end": 309369, "type": "String" },
                 "word_04B879": { "start": 309369, "end": 309787, "type": "Word" },
-                "unk39_04BA1B": { "start": 309787, "end": 313519, "type": "unk39" },
+                "unk39_04BA1B": { "start": 309787, "end": 310336, "type": "unk39" },
+                "code_04BC40": { "start": 310336, "end": 310380, "type": "Code" },
+                "code_04BC6C": { "start": 310380, "end": 313519, "type": "Code" },
                 "unk9_04C8AF": { "start": 313519, "end": 313593, "type": "unk9" },
                 "unk9_04C8F9": { "start": 313593, "end": 324800, "type": "unk9" },
                 "unk35_04F4C0": { "start": 324800, "end": 325026, "type": "unk35" },
@@ -232,7 +240,8 @@
             "parts": {
                 "unk8_0C8000": { "start": 819200, "end": 832122, "type": "unk8" },
                 "string_0CB27A": { "start": 832122, "end": 838972, "type": "String" },
-                "code_0CCD3C": { "start": 838972, "end": 847272, "type": "Code" },
+                "code_0CCD3C": { "start": 838972, "end": 845586, "type": "Code" },
+                "string_0CE712": { "start": 845586, "end": 847272, "type": "String" },
                 "unk13_0CEDA8": { "start": 847272, "end": 847596, "type": "&unk13" }
             }
         },
@@ -255,11 +264,6 @@
         "table_10D000": {
             "parts": {
                 "unk36_list_10D000": { "start": 1101824, "end": 1112900, "type": "&unk36" }
-            }
-        },
-        "data_128FAE": {
-            "parts": {
-                "word_128FAE": { "start": 1216430, "end": 1220526, "type": "Word" }
             }
         }
     }

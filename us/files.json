@@ -317,6 +317,7 @@
             "spritemap_1277FB": { "start": 1210363, "end": 1212091, "type": "Spritemap" },
             "spritemap_127EBB": { "start": 1212091, "end": 1212416, "type": "Spritemap" },
             "spritemap_128000": { "start": 1212416, "end": 1216430, "type": "RawSpritemap" },
+            "bitmap_128FAE": { "start": 1216430, "end": 1220526, "type": "RawBitmap" },
             "spritemap_129FAE": { "start": 1220526, "end": 1220608, "type": "Spritemap" },
             "spritemap_12A000": { "start": 1220608, "end": 1223021, "type": "RawSpritemap" },
             "tileset_12A96D": { "start": 1223021, "end": 1224704, "type": "Tileset" },

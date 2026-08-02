@@ -267,6 +267,9 @@
         "delimiter": 0,
         "types": [ "Byte", "&Binary", "Word", "Byte", "&Binary" ]
     },
+    "unk37": {
+        "types": [ "@Binary", "Byte" ]
+    },
     "unk38": {
         "delimiter": 0,
         "types": [ "Byte", "Byte", "Byte" ]
