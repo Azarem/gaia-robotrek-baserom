@@ -61,7 +61,7 @@
         "discriminator": 0,
         "discriminatorLogic": "&",
         "null": 65535,
-        "types": [ "Word", "Word", "Byte", "Word" ]
+        "types": [ "Byte", "@Binary", "Byte", "Word" ]
     },
     "part2": {
         "parent": "part1",
@@ -218,7 +218,7 @@
     "unk24": {
         "discriminator": 0,
         "discriminatorSize": 2,
-        "types": [ "&Code" ]
+        "types": [ "&Code$$" ]
     },
     "unk25": {
         "parent": "unk24",
@@ -276,5 +276,16 @@
     },
     "unk39": {
         "types": [ "Byte", "Byte", "Byte", "Byte" ]
+    },
+    "unk40": {
+        "delimiter": 255,
+        "types": [ "Byte", "Byte", "Byte" ]
+    },
+    "unk41": {
+        "delimiter": 255,
+        "types": [ "Byte", "Byte" ]
+    },
+    "unk42": {
+        "types": [ "&Code", "&Code", "&Code" ]
     }
 }

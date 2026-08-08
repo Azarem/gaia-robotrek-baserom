@@ -18,5 +18,6 @@
   "nativeNmi": "native_mode_nmi_00800D",
   "nativeIrq": "native_mode_irq_008011",
   "emulationReset": "emulation_mode_reset_008000",
-  "oddLocationBase": 13
+  "oddLocationBase": 13,
+  "oddLocationSpan": 24
 }

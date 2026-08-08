@@ -30,13 +30,15 @@
         "extension": "raw.sprite.asm",
         "type": "Spritemap",
         "struct": "~&sprite_set",
-        "base": 0
+        "base": 0,
+        "upper": true
     },
     "RawSpritemap2": {
         "extension": "raw.sprite2.asm",
         "type": "Spritemap",
         "struct": "~&sprite_set2",
-        "base": 0
+        "base": 0,
+        "upper": true
     },
     "Music": {
         "extension": "bgm",
