@@ -25,9 +25,37 @@
                 "unk8_02FBAB": { "start": 195499, "end": 196423, "type": "unk8" }
             }
         },
+        "map_meta_030000": {
+            "parts": {
+                "map_meta_030000": { "start": 196608, "end": 200866, "type": "mapMeta" }
+            }
+        },
         "chunk_038000": {
             "parts": {
                 "unk4_list_038000": { "start": 229376, "end": 261346, "type": "&unk4" }
+            }
+        },
+        "chunk_048000": {
+            "parts": {
+                "code_048000": { "start": 294912, "end": 302752, "type": "Code" },
+                "code_list_049EA0": { "start": 302752, "end": 298379, "type": "&Code" },
+                "addr_list_048D8B": { "start": 298379, "end": 327463, "type": "Address" }
+            }
+        },
+        "chunk_058000": {
+            "parts": {
+                "unk8_058000": { "start": 360448, "end": 392883, "type": "unk8" }
+            }
+        },
+        "chunk_068000": {
+            "parts": {
+                "unk8_068000": { "start": 425984, "end": 455448, "type": "unk8" },
+                "string_list_06F318": { "start": 455448, "end": 458259, "type": "&String" }
+            }
+        },
+        "map_meta_0C8000": {
+            "parts": {
+                "map_meta_0C8000": { "start": 819200, "end": 824080, "type": "mapMeta" }
             }
         }
     }

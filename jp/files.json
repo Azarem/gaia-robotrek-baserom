@@ -1,3 +1,10 @@
 {
-    
+    "system": {
+        "": {
+            "bitmap_040000": { "start": 262144, "end": 278528, "type": "RawBitmap" },
+            "bitmap_050000": { "start": 327680, "end": 344064, "type": "RawBitmap" },
+            "bitmap_054000": { "start": 344064, "end": 360448, "type": "RawBitmap" },
+            "bitmap_060000": { "start": 393216, "end": 402432, "type": "RawBitmap" }
+        }
+    }
 }
