@@ -1,7 +1,11 @@
+import { fileURLToPath } from 'url';
+import { dirname, join, resolve } from 'path';
 import { DbBlock, DbFile, DbGroup, DbStringType, DbStruct, CopDef, DbFileType } from '@gaialabs/core';
 import { DbRootUtils } from '@gaialabs/core';
 import type { DbAddressingMode, DbConfig, DbGameRomModule } from '@gaialabs/core';
 import { snes } from '@gaialabs/core';
+
+const __pkgRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 import config from '../us/config.json' with { type: 'json' };
 import blocks from '../us/blocks.json' with { type: 'json' };
@@ -68,6 +72,7 @@ export const jp : DbGameRomModule = {
 };
 
 export async function extract(romPath: string, outPath: string) {
+    if (!romPath) romPath = process.env.ROM_PATH;
     if(!outPath) outPath = './extracted';
 
     var dbRoot = DbRootUtils.fromGameModule(db);
@@ -83,20 +88,20 @@ export async function extractJP(romPath: string, outPath: string) {
     await DbRootUtils.extractAllContent(dbRoot, romPath, outPath);
 }
 
-export async function rebuild(inPath: string, outPath: string, baseRomPath: string) {
+export async function rebuild(inPath: string, outPath: string, baseRomPath: string, modulePaths?: string[]) {
     if(!inPath) inPath = './extracted';
     if(!outPath) outPath = './rebuilt';
-    if(!baseRomPath) baseRomPath = './baserom';
+    if(!baseRomPath) baseRomPath = join(__pkgRoot, 'baserom');
     
     var dbRoot = DbRootUtils.fromGameModule(db);
 
-    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath], `${outPath}/GaiaLabs.smc`);
+    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], `${outPath}/GaiaLabs.smc`);
 }
 
 export async function rebuildJp(inPath: string, outPath: string, baseRomPath: string) {
     if(!inPath) inPath = './extracted-jp';
     if(!outPath) outPath = './rebuilt-jp';
-    if(!baseRomPath) baseRomPath = './baserom-jp';
+    if(!baseRomPath) baseRomPath = join(__pkgRoot, 'baserom-jp');
     
     var dbRoot = DbRootUtils.fromGameModule(db);
 
@@ -105,7 +110,7 @@ export async function rebuildJp(inPath: string, outPath: string, baseRomPath: st
 
 // CLI handler - only execute when run directly (not when imported as a module)
 // Check if this module is being run directly
-const isMainModule = process.argv[1]?.includes('index.ts') || process.argv[1]?.includes('index.js');
+const isMainModule = resolve(process.argv[1] || '') === fileURLToPath(import.meta.url);
 
 if (isMainModule) {
     const command = process.argv[2];
