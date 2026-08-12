@@ -13,6 +13,12 @@
                     "'", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
                     "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "▸", "├", "┬", "┤", "·"
                 ]
+            },
+            {
+                "base": 240,
+                "map": [ 
+                    "Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ", "Ⅵ", "Ⅶ", "Ⅷ", "Ⅸ", "ℇ", "℞", "⅁", "℈", "ℳ", "⅄", "☻"
+                ]
             }
         ],
         "commands": {
@@ -60,7 +66,7 @@
             "PAL": { "id": 195, "types": [ "Byte" ] },
             "PGE": { "id": 196, "types": [ ] },
             "TBL": { "id": 197, "types": [ "Offset", "Offset" ] },
-            "C6": { "id": 198, "types": [ "Byte", "Word" ] },
+            "NUM": { "id": 198, "types": [ "Byte", "Word" ] },
             "BOX": { "id": 199, "types": [ "Byte", "Byte", "Byte" ] },
             "DES": { "id": 200, "types": [ ] },
             "PAU": { "id": 201, "types": [ "Byte" ] },
@@ -85,10 +91,11 @@
             "DLY": { "id": 220, "types": [ "Byte" ] },
             "DD": { "id": 221, "types": [ ] },
             "NXT": { "id": 222, "types": [ ], "halt": true },
-            "DF": { "id": 223, "types": [ "Byte", "Byte", "Word" ] },
+            "DEC": { "id": 223, "types": [ "Byte", "Byte", "Word" ] },
             "TPL": { "id": 224, "types": [ "Byte" ] },
             "ESC": { "id": 225, "types": [ ], "halt": true },
-            "E2": { "id": 226, "types": [ "Word" ] }
+            "E2": { "id": 226, "types": [ "Word" ] },
+            "DIC": { "id": 227, "types": [ "Byte" ] }
         },
         "dictionaries": {
             "std": {

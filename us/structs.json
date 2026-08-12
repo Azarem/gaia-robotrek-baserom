@@ -2,32 +2,32 @@
     "unk1": {
         "discriminator": 0,
         "delimiter": 255,
-        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "@unk8", "@unk11" ]
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "@actor", "@unk11" ]
     },
     "unk2": {
         "parent": "unk1",
         "discriminator": 254,
-        "types": [ "Byte", "@unk8" ]
+        "types": [ "Byte", "@actor" ]
     },
     "unk3": {
         "parent": "unk1",
         "discriminator": 253,
-        "types": [ "Byte", "Byte", "Byte", "@unk8" ]
+        "types": [ "Byte", "Byte", "Byte", "@actor" ]
     },
     "unkFC": {
         "parent": "unk1",
         "discriminator": 252,
-        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "@unk8", "@unk11" ]
+        "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "@actor", "@unk11" ]
     },
     "unk4": {
         "discriminator": 0,
         "delimiter": 255,
-        "types": [ "Byte", "Byte", "Byte", "Byte", "@unk8", "@unk11" ]
+        "types": [ "Byte", "Byte", "Byte", "Byte", "@actor", "@unk11" ]
     },
     "unk5": {
         "parent": "unk4",
         "discriminator": 254,
-        "types": [ "@unk8", "@unk11" ]
+        "types": [ "@actor", "@unk11" ]
     },
     "unk6": {
         "parent": "unk4",
@@ -37,9 +37,9 @@
     "unk7": {
         "parent": "unk4",
         "discriminator": 252,
-        "types": [ "Byte", "Byte", "Byte", "@unk8" ]
+        "types": [ "Byte", "Byte", "Byte", "@actor" ]
     },
-    "unk8": {
+    "actor": {
         "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Code" ]
     },
     "unk9": {
