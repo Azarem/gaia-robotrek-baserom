@@ -75,7 +75,7 @@
             "TER": { "id": 204, "types": [ ], "halt": true },
             "N": { "id": 205, "types": [ ] },
             "SKP": { "id": 206, "types": [ "Byte" ] },
-            "CF": { "id": 207, "types": [ "Address" ] },
+            "STR": { "id": 207, "types": [ "Address" ] },
             "CLR": { "id": 208, "types": [ ] },
             "FIN": { "id": 209, "types": [ ] },
             "WAI": { "id": 210, "types": [ ] },

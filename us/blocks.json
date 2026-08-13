@@ -155,7 +155,9 @@
                 "code_04BC40": { "start": 310336, "end": 310380, "type": "Code" },
                 "code_04BC6C": { "start": 310380, "end": 313519, "type": "Code" },
                 "unk9_04C8AF": { "start": 313519, "end": 313593, "type": "unk9" },
-                "unk9_04C8F9": { "start": 313593, "end": 324800, "type": "unk9" },
+                "unk9_04C8F9": { "start": 313593, "end": 320666, "type": "unk9" },
+                "actor_04E6E9": { "start": 321257, "end": 321286, "type": "actor" },
+                "actor_04E7C5": { "start": 321477, "end": 324800, "type": "actor" },
                 "unk35_04F4C0": { "start": 324800, "end": 325026, "type": "unk35" },
                 "string_list_04F5A2": { "start": 325026, "end": 327604, "type": "&String" }
             }
@@ -283,6 +285,50 @@
         "table_10D000": {
             "parts": {
                 "unk36_list_10D000": { "start": 1101824, "end": 1112900, "type": "&unk36" }
+            }
+        }
+    },
+    "boot": {
+        "actor_04E49A": {
+            "movable": true,
+            "scene": "title_screen",
+            "parts": {
+                "actor_04E49A": { "start": 320666, "end": 320823, "type": "actor" }
+            }
+        },
+        "actor_04E537": {
+            "movable": true,
+            "scene": "title_screen",
+            "parts": {
+                "actor_04E537": { "start": 320823, "end": 320961, "type": "actor" }
+            }
+        },
+        "actor_04E5C1": {
+            "movable": true,
+            "scene": "title_screen",
+            "parts": {
+                "actor_04E5C1": { "start": 320961, "end": 321036, "type": "actor" }
+            }
+        },
+        "actor_04E60C": {
+            "movable": true,
+            "scene": "title_screen",
+            "parts": {
+                "actor_04E60C": { "start": 321036, "end": 321105, "type": "actor" }
+            }
+        },
+        "actor_04E651": {
+            "movable": true,
+            "scene": "title_screen",
+            "parts": {
+                "actor_04E651": { "start": 321105, "end": 321257, "type": "actor" }
+            }
+        },
+        "actor_04E706": {
+            "movable": true,
+            "scene": "prologue",
+            "parts": {
+                "actor_04E706": { "start": 321286, "end": 321477, "type": "actor" }
             }
         }
     }

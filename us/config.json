@@ -1,5 +1,6 @@
 {
   "compression": "QuintetLZ",
+  "uncompress": true,
   "sfxLocation": 589824,
   "sfxCount": 52,
   "sfxType": "Striped",

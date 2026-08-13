@@ -1,6 +1,6 @@
 {
     "name": "@gaialabs/robotrek-baserom",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "type": "module",
     "description": "GaiaLabs Robotrek Base ROM",
     "funding": "https://github.com/sponsors/Azarem",
@@ -27,13 +27,13 @@
         "clean": "rm -rf dist",
         "clean-install": "rm -rf node_modules && rm -rf package-lock.json && npm install",
         "publish": "tsdown && npm publish --access public",
-        "extract": "node src/index.ts extract",
-        "extract-jp": "node src/index.ts extract-jp",
+        "extract": "rm -rf extracted && node --env-file=.env.local src/index.ts extract",
+        "extract-jp": "rm -rf extracted-jp && node --env-file=.env.local src/index.ts extract-jp",
         "extract-strings": "node src/extractStrings.ts",
         "rebuild": "node src/index.ts rebuild"
     },
     "dependencies": {
-        "@gaialabs/core": "0.2.18"
+        "@gaialabs/core": "0.2.19"
     },
     "devDependencies": {
         "@types/node": "^20.19.29",
