@@ -1,3 +1,6 @@
+;This patch allows the game to use lookup tables for meta loading and jumps
+;This removes the need for two meta tables, and speeds up loading times
+
 ?BANK 4
 
 ;?INCLUDE 'chunk_008000'

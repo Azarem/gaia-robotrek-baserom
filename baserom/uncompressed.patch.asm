@@ -1,3 +1,5 @@
+;This patch file allows map assets to be loaded uncompressed
+;Uncompressed files use a negative size header to avoid altering the meta tables
 
 !VMADDL                         2116
 !DMAP0                          4300

@@ -1,3 +1,5 @@
+;This patch contains miscellaneous changes to map/meta loading
+;It also contains a fix for string font stamping so the raw bitmap can be moved
 
 !VMADDL                         2116
 !MDMAEN                         420B

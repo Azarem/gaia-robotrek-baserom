@@ -1,4 +1,4 @@
-
+;This patch adds the GaiaLabs logo to the boot sequence
 
 -------------------------------------
 ?INCLUDE 'map_meta'

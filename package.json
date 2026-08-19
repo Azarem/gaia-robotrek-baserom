@@ -29,7 +29,6 @@
         "publish": "tsdown && npm publish --access public",
         "extract": "rm -rf extracted && node --env-file=.env.local src/index.ts extract",
         "extract-jp": "rm -rf extracted-jp && node --env-file=.env.local src/index.ts extract-jp",
-        "extract-strings": "node src/extractStrings.ts",
         "rebuild": "node src/index.ts rebuild"
     },
     "dependencies": {

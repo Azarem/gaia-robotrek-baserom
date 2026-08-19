@@ -1,3 +1,5 @@
+;This patch file adjusts various music loading processes, making them faster
+;MSU support will be added eventually
 
 ?INCLUDE 'chunk_048000'
 
