@@ -42,7 +42,7 @@
     "actor": {
         "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Code" ]
     },
-    "unk9": {
+    "const": {
         "delimiter": 65535,
         "types": [ "Word", "Word" ]
     },
@@ -102,6 +102,26 @@
         "parent": "meta<>",
         "discriminator": 16,
         "types": [ "Byte", "!Binary" ]
+    },
+    "jump": {
+        "parent": "meta<>",
+        "discriminator": 65288,
+        "types": [ "Byte", "Byte" ]
+    },
+    "marker": {
+        "parent": "meta<>",
+        "discriminator": 65032,
+        "types": [ "Byte", "Byte" ]
+    },
+    "branch": {
+        "parent": "meta<>",
+        "discriminator": 64776,
+        "types": [ "Byte", "Byte" ]
+    },
+    "bgm": {
+        "parent": "meta<>",
+        "discriminator": 64520,
+        "types": [ "Byte", "Byte" ]
     },
     "meta08": {
         "parent": "meta<>",
@@ -265,7 +285,7 @@
     },
     "unk36": {
         "delimiter": 0,
-        "types": [ "Byte", "&Binary", "Word", "Byte", "&Binary" ]
+        "types": [ "Byte", "&Binary", "Word", "Byte", "&Word" ]
     },
     "unk37": {
         "types": [ "@Binary", "Byte" ]

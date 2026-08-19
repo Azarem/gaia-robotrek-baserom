@@ -23,7 +23,7 @@ import fileTypes from '../us/fileTypes.json' with { type: 'json' };
 
 import configJP from '../jp/config.json' with { type: 'json' };
 import blocksJP from '../jp/blocks.json' with { type: 'json' };
-import copdefJP from '../us/copdef.json' with { type: 'json' };
+import copdefJP from '../jp/copdef.json' with { type: 'json' };
 import filesJP from '../jp/files.json' with { type: 'json' };
 import groupsJP from '../jp/groups.json' with { type: 'json' };
 import labelsJP from '../jp/labels.json' with { type: 'json' };
@@ -81,6 +81,7 @@ export async function extract(romPath: string, outPath: string) {
 }
 
 export async function extractJP(romPath: string, outPath: string) {
+    if (!romPath) romPath = process.env.ROM_PATH_JP;
     if(!outPath) outPath = './extracted-jp';
 
     var dbRoot = DbRootUtils.fromGameModule(jp);
@@ -95,17 +96,17 @@ export async function rebuild(inPath: string, outPath: string, baseRomPath: stri
     
     var dbRoot = DbRootUtils.fromGameModule(db);
 
-    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], `${outPath}/GaiaLabs.smc`);
+    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], `${outPath}/Robotrek-Rebuilt.smc`);
 }
 
-export async function rebuildJp(inPath: string, outPath: string, baseRomPath: string) {
+export async function rebuildJp(inPath: string, outPath: string, baseRomPath: string, modulePaths?: string[]) {
     if(!inPath) inPath = './extracted-jp';
     if(!outPath) outPath = './rebuilt-jp';
     if(!baseRomPath) baseRomPath = join(__pkgRoot, 'baserom-jp');
     
-    var dbRoot = DbRootUtils.fromGameModule(db);
+    var dbRoot = DbRootUtils.fromGameModule(jp);
 
-    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath], `${outPath}/GaiaLabs.smc`);
+    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], `${outPath}/SlapStick-Rebuilt.smc`);
 }
 
 // CLI handler - only execute when run directly (not when imported as a module)
