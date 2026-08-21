@@ -106,12 +106,14 @@
     "jump": {
         "parent": "meta<>",
         "discriminator": 65288,
-        "types": [ "Byte", "Byte" ]
+        "tail": 1,
+        "types": [ "Byte" ]
     },
     "marker": {
         "parent": "meta<>",
         "discriminator": 65032,
-        "types": [ "Byte", "Byte" ]
+        "tail": 1,
+        "types": [ "Byte" ]
     },
     "branch": {
         "parent": "meta<>",
@@ -121,12 +123,14 @@
     "bgm": {
         "parent": "meta<>",
         "discriminator": 64520,
-        "types": [ "Byte", "Byte" ]
+        "tail": 1,
+        "types": [ "Byte" ]
     },
-    "meta08": {
+    "state": {
         "parent": "meta<>",
         "discriminator": 8,
-        "types": [ "Byte", "Byte", "Byte" ]
+        "discriminatorSize": 2,
+        "types": [ "Byte", "Byte" ]
     },
     "meta04": {
         "parent": "meta<>",
@@ -138,7 +142,7 @@
         "discriminator": 2,
         "types": [ "Byte", "Byte", "!Binary" ]
     },
-    "meta01": {
+    "strangemap": {
         "parent": "meta<>",
         "discriminator": 1,
         "types": [ "Byte", "Word", "!Binary" ]

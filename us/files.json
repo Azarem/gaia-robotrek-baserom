@@ -204,7 +204,7 @@
             "palette_033B4E": { "start": 211790, "end": 211918, "type": "Palette" },
             "palette_033BCE": { "start": 211918, "end": 212046, "type": "Palette" },
             "tilemap_033C4E": { "start": 212046, "end": 212172, "type": "Tilemap" },
-            "music_033CCC": { "start": 212172, "end": 212297, "type": "Music" },
+            "bgm_no_music": { "start": 212172, "end": 212297, "type": "Music" },
             "tilemap_033D49": { "start": 212297, "end": 212418, "type": "Tilemap" },
             "spritemap_033DC2": { "start": 212418, "end": 212532, "type": "Spritemap" },
             "tilemap_033E34": { "start": 212532, "end": 212631, "type": "Tilemap" },
@@ -637,7 +637,7 @@
             "bitmap_17DA5E": { "start": 1563230, "end": 1567143, "type": "Bitmap" },
             "tileset_17E9A7": { "start": 1567143, "end": 1568852, "type": "Tileset" },
             "music_17F054": { "start": 1568852, "end": 1570542, "type": "Music" },
-            "music_17F6EE": { "start": 1570542, "end": 1572169, "type": "Music" },
+            "bgm_reset": { "start": 1570542, "end": 1572169, "type": "Music" },
             "tilemap_17FD49": { "start": 1572169, "end": 1572864, "type": "Tilemap" }
         }
     }

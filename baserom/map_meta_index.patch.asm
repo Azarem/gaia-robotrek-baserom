@@ -44,13 +44,13 @@ code_048E00 {
     LDA #$01
     STA $086E
     JSR $&code_048D23
-    STA $0872
+    STA $0870
     INY
     PHY
     REP #$20
     ASL
     CLC
-    ADC $0872
+    ADC $0870
     TAX
     LDA $@music_list_01CA3C, X
     STA $42

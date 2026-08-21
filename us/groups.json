@@ -1,152 +1,79 @@
 {
     "world": {
         "scenes": {
-            "world_map": {
-                "id": 1
-            },
-            "world_autumn": {
-                "id": 2
-            },
-            "world_space": {
-                "id": 3
-            }
+            "present": { "id": 1 },
+            "past": { "id": 2 },
+            "space": { "id": 3 }
         }
     },
     "boot": {
         "scenes": {
-            "title_screen": {
-                "id": 4
-            },
-            "diary_menu": {
-                "id": 5
-            },
-            "prologue_space": {
-                "id": 6
-            },
-            "prologue_hackers": {
-                "id": 7
-            },
-            "prologue_androids": {
-                "id": 8
-            },
-            "prologue_inventor": {
-                "id": 9
-            },
-            "prologue_mayhem": {
-                "id": 53
-            },
-            "prologue_rococo": {
-                "id": 54
-            },
-            "boot_logo": {
-                "id": 449
-            }
+            "title_screen": { "id": 4 },
+            "diary_menu": { "id": 5 },
+            "prologue_space": { "id": 6 },
+            "prologue_hackers": { "id": 7 },
+            "prologue_androids": { "id": 8 },
+            "prologue_inventor": { "id": 9 },
+            "prologue_mayhem": { "id": 53 },
+            "prologue_rococo": { "id": 54 },
+            "boot_logo": { "id": 449 }
         }
     },
     "rococo": {
         "scenes": {
-            "rococo": {
-                "id": 10
-            }
+            "rococo": { "id": 10 },
+            "robot_factory": { "id": 440 }
         }
     },
     "credits": {
         "scenes": {
-            "credits_heroes": {
-                "id": 190
-            },
-            "credits_festival": {
-                "id": 191
-            },
-            "credits_family": {
-                "id": 192
-            },
-            "credits_lovers": {
-                "id": 193
-            },
-            "credits_ghosts": {
-                "id": 194
-            },
-            "credits_hackers": {
-                "id": 195
-            },
-            "credits_puppets": {
-                "id": 196
-            },
-            "credits_natives": {
-                "id": 197
-            },
-            "credits_shaman": {
-                "id": 198
-            },
-            "credits_cafeteria": {
-                "id": 450
-            },
-            "credits_inventors": {
-                "id": 451
-            },
-            "credits_holiday": {
-                "id": 452
-            },
-            "credits_mainframe": {
-                "id": 453
-            },
-            "credits_cyberspace": {
-                "id": 454
-            },
-            "credits_chickens": {
-                "id": 455
-            },
-            "credits_scoop": {
-                "id": 456
-            },
-            "credits_space": {
-                "id": 457
-            },
-            "credits_fortress": {
-                "id": 458
-            }
+            "credits_heroes": { "id": 190 },
+            "credits_festival": { "id": 191 },
+            "credits_family": { "id": 192 },
+            "credits_lovers": { "id": 193 },
+            "credits_ghosts": { "id": 194 },
+            "credits_hackers": { "id": 195 },
+            "credits_puppets": { "id": 196 },
+            "credits_natives": { "id": 197 },
+            "credits_shaman": { "id": 198 },
+            "credits_cafeteria": { "id": 450 },
+            "credits_inventors": { "id": 451 },
+            "credits_holiday": { "id": 452 },
+            "credits_mainframe": { "id": 453 },
+            "credits_cyberspace": { "id": 454 },
+            "credits_chickens": { "id": 455 },
+            "credits_scoop": { "id": 456 },
+            "credits_space": { "id": 457 },
+            "credits_fortress": { "id": 458 }
         }
     },
     "snow_mountain": {
         "scenes": {
-            "snow_harbor": {
-                "id": 231
-            },
-            "snow_cliffs": {
-                "id": 232
-            },
-            "snow_mountain": {
-                "id": 233
-            },
-            "snow_birds": {
-                "id": 234
-            }
+            "snow_harbor": { "id": 231 },
+            "snow_cliffs": { "id": 232 },
+            "snow_mountain": { "id": 233 },
+            "snow_birds": { "id": 234 }
         }
     },
     "native_village": {
         "scenes": {
-            "native_village": {
-                "id": 121
-            },
-            "elders_hut": {
-                "id": 122
-            },
-            "native_inn": {
-                "id": 123
-            },
-            "shaman_house": {
-                "id": 124
-            },
-            "shaman_altar": {
-                "id": 125
-            },
-            "isle_shop": {
-                "id": 187
-            },
-            "volcano": {
-                "id": 126
-            }
+            "native_village": { "id": 121 },
+            "elders_hut": { "id": 122 },
+            "native_inn": { "id": 123 },
+            "shaman_house": { "id": 124 },
+            "shaman_altar": { "id": 125 },
+            "isle_shop": { "id": 187 },
+            "volcano": { "id": 126 }
+        }
+    },
+    "hacker_fortress": {
+        "scenes": {
+            "crystal_dream": { "id": 355 },
+            "crystal_walking": { "id": 370 },
+            "tetron_room": { "id": 371 },
+            "fortress_escape": { "id": 372 },
+            "fortress_destroyed": { "id": 373 },
+            "return_to_quintenix": { "id": 374 }
         }
     }
 }

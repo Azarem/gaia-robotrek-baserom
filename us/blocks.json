@@ -153,11 +153,7 @@
                 "code_04BE0E": { "start": 310798, "end": 313519, "type": "Code" },
                 "const_04C8AF": { "start": 313519, "end": 313593, "type": "const" },
                 "const_04C8F9": { "start": 313593, "end": 313603, "type": "const" },
-                "actor_04DB88": { "start": 318344, "end": 320666, "type": "actor" },
-                "actor_04EF36": { "start": 323382, "end": 324800, "type": "actor" },
-                "unk35_04F4C0": { "start": 324800, "end": 324995, "type": "unk35" },
-                "string_04F583": { "start": 324995, "end": 325026, "type": "String" },
-                "string_list_04F5A2": { "start": 325026, "end": 327604, "type": "&String" }
+                "code_04F999": { "start": 326041, "end": 327604, "type": "Code" }
             }
         },
         "chunk_058000": {
@@ -347,7 +343,14 @@
         "actor_04DA9E": { "start": 318110, "end": 318122, "type": "actor", "scene": "credits_fortress", "movable": true },
         "actor_04DAAA": { "start": 318122, "end": 318141, "type": "actor", "scene": "credits_festival", "movable": true },
         "actor_04DABD": { "start": 318141, "end": 318149, "type": "actor", "scene": "credits_festival", "movable": true },
-        "actor_04DAC5": { "start": 318149, "end": 318221, "type": "actor", "movable": true }
+        "actor_04DAC5": { "start": 318149, "end": 318221, "type": "actor", "movable": true },
+        "credit_table": { "start": 324800, "end": 324995, "type": "unk35", "movable": true },
+        "credit_strings": {
+            "parts": { 
+                "string_04F583": { "start": 324995, "end": 325026, "type": "String" },
+                "credit_name_list": { "start": 325026, "end": 326041, "type": "&String" }
+            }
+        }
     },
     "snow_mountain": {
         "actor_04BADE": { "start": 309982, "end": 310062, "type": "actor", "movable": true }
@@ -359,8 +362,18 @@
         "actor_04B3D8": { "start": 308184, "end": 308222, "type": "actor", "movable": true },
         "actor_04B3FE": { "start": 308222, "end": 308258, "type": "actor", "movable": true },
         "actor_04B422": { "start": 308258, "end": 308372, "type": "actor", "movable": true },
-        "actor_04B494": { "start": 308372, "end": 308486, "type": "actor", "scene": "world_space", "movable": true },
-        "actor_04B506": { "start": 308486, "end": 308619, "type": "actor", "scene": "world_space", "movable": true }
+        "actor_04B494": { "start": 308372, "end": 308486, "type": "actor", "scene": "space", "movable": true },
+        "actor_04B506": { "start": 308486, "end": 308619, "type": "actor", "scene": "space", "movable": true }
+    },
+    "rococo": {
+        "actor_04EF36": { "start": 323382, "end": 323526, "type": "actor", "scene": "robot_factory", "movable": true },
+        "actor_04EFC6": { "start": 323526, "end": 323834, "type": "actor", "scene": "robot_factory", "movable": true },
+        "actor_04F0FA": { "start": 323834, "end": 324102, "type": "actor", "scene": "robot_factory", "movable": true },
+        "actor_04F206": { "start": 324102, "end": 324252, "type": "actor", "scene": "robot_factory", "movable": true },
+        "actor_04F29C": { "start": 324252, "end": 324297, "type": "actor", "scene": "robot_factory", "movable": true },
+        "actor_04F2C9": { "start": 324297, "end": 324334, "type": "actor", "scene": "robot_factory", "movable": true },
+        "factory_functions": { "start": 324334, "end": 324800, "type": "actor", "scene": "robot_factory", "movable": true }
+
     },
     "boot": {
         "actor_04B187": { "start": 307591, "end": 307870, "type": "actor", "scene": "boot_logo", "movable": true },
@@ -388,5 +401,22 @@
         "actor_04EE5A": { "start": 323162, "end": 323192, "type": "actor", "scene": "prologue_inventor", "movable": true },
         "actor_04EE78": { "start": 323192, "end": 323211, "type": "actor", "scene": "prologue_inventor", "movable": true },
         "actor_04EE8B": { "start": 323211, "end": 323382, "type": "actor", "scene": "prologue_inventor" }
+    },
+    "hacker_fortress": {
+        "actor_04DB88": { "start": 318344, "end": 318553, "type": "actor", "scene": "tetron_room", "movable": true },
+        "actor_04DC59": { "start": 318553, "end": 319038, "type": "actor", "scene": "fortress_escape", "movable": true },
+        "actor_04DE3E": { "start": 319038, "end": 319046, "type": "actor", "scene": "fortress_destroyed", "movable": true },
+        "actor_04DE46": { "start": 319046, "end": 319072, "type": "actor", "scene": "return_to_quintenix", "movable": true },
+        "actor_04DE60": { "start": 319072, "end": 319121, "type": "actor", "scene": "crystal_dream", "movable": true },
+        "actor_04DE91": { "start": 319121, "end": 319156, "type": "actor", "scene": "crystal_walking", "movable": true },
+        "actor_04DEB4": { "start": 319156, "end": 319343, "type": "actor", "scene": "tetron_room" },
+        "actor_04DF6F": { "start": 319343, "end": 319590, "type": "actor", "scene": "tetron_room" },
+        "actor_04E066": { "start": 319590, "end": 319668, "type": "actor", "scene": "tetron_room" },
+        "actor_04E0B4": { "start": 319668, "end": 319977, "type": "actor", "scene": "tetron_room" },
+        "actor_04E1E9": { "start": 319977, "end": 320357, "type": "actor", "scene": "tetron_room", "movable": true },
+        "actor_04E365": { "start": 320357, "end": 320394, "type": "actor", "movable": true },
+        "actor_04E38A": { "start": 320394, "end": 320550, "type": "actor", "scene": "return_to_quintenix", "movable": true },
+        "actor_04E426": { "start": 320550, "end": 320568, "type": "actor", "scene": "fortress_destroyed", "movable": true },
+        "actor_04E438": { "start": 320568, "end": 320666, "type": "actor", "scene": "fortress_escape", "movable": true }
     }
 }
