@@ -158,7 +158,7 @@
         },
         "chunk_058000": {
             "parts": {
-                "actor_058000": { "start": 360448, "end": 392407, "type": "actor" }
+                "actor_058DAB": { "start": 363947, "end": 392407, "type": "actor" }
             }
         },
         "chunk_068000": {
@@ -269,7 +269,9 @@
         "actor_04BB2E": { "start": 310062, "end": 310336, "type": "actor", "movable": true },
         "actor_04BCB7": { "start": 310455, "end": 310557, "type": "actor", "movable": true },
         "actor_04BD1D": { "start": 310557, "end": 310740, "type": "actor", "movable": true },
-        "actor_04DB0D": { "start": 318221, "end": 318344, "type": "actor", "movable": true }
+        "actor_04DB0D": { "start": 318221, "end": 318344, "type": "actor", "movable": true },
+        "actor_058000": { "start": 360448, "end": 360482, "type": "actor", "movable": true },
+        "actor_05899B": { "start": 362907, "end": 362969, "type": "actor", "movable": true }
     },
     "credits": {
         "actor_04B837": { "start": 309303, "end": 309377, "type": "actor", "scene": "credits_heroes", "movable": true },
@@ -372,7 +374,11 @@
         "actor_04F206": { "start": 324102, "end": 324252, "type": "actor", "scene": "robot_factory", "movable": true },
         "actor_04F29C": { "start": 324252, "end": 324297, "type": "actor", "scene": "robot_factory", "movable": true },
         "actor_04F2C9": { "start": 324297, "end": 324334, "type": "actor", "scene": "robot_factory", "movable": true },
-        "factory_functions": { "start": 324334, "end": 324800, "type": "actor", "scene": "robot_factory", "movable": true }
+        "factory_functions": { "start": 324334, "end": 324800, "type": "actor", "scene": "robot_factory", "movable": true },
+        "actor_058022": { "start": 360482, "end": 360589, "type": "actor", "scene": "rococo", "movable": true },
+        "actor_05808D": { "start": 360589, "end": 360985, "type": "actor", "scene": "rococo", "movable": true },
+        "actor_058219": { "start": 360985, "end": 362907, "type": "actor", "scene": "rococo", "movable": true },
+        "actor_0589D9": { "start": 362969, "end": 363947, "type": "actor", "scene": "rococo", "movable": true }
 
     },
     "boot": {

@@ -94,7 +94,7 @@ code_049104 {
     STA $0874
     LDA $msu_flag
     BNE msu_begin_load
-    BRA bgm_halt
+    ;BRA loc_048CB6
 
     ;LDA #$F2
     ;STA $APUIO0

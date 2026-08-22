@@ -32,7 +32,7 @@
         "rebuild": "node src/index.ts rebuild"
     },
     "dependencies": {
-        "@gaialabs/core": "0.2.22"
+        "@gaialabs/core": "0.2.24"
     },
     "devDependencies": {
         "@types/node": "^20.19.29",
