@@ -29,10 +29,12 @@
         "publish": "tsdown && npm publish --access public",
         "extract": "rm -rf extracted && node --env-file=.env.local src/index.ts extract",
         "extract-jp": "rm -rf extracted-jp && node --env-file=.env.local src/index.ts extract-jp",
-        "rebuild": "node src/index.ts rebuild"
+        "rebuild": "node src/index.ts rebuild",
+        "analyze-actors": "node --experimental-strip-types scripts/analyze_actors.ts",
+        "organize-actors": "node --experimental-strip-types scripts/organize_actors.ts"
     },
     "dependencies": {
-        "@gaialabs/core": "0.2.24"
+        "@gaialabs/core": "0.2.25"
     },
     "devDependencies": {
         "@types/node": "^20.19.29",
