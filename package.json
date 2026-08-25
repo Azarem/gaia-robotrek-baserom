@@ -1,6 +1,6 @@
 {
     "name": "@gaialabs/robotrek-baserom",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "type": "module",
     "description": "GaiaLabs Robotrek Base ROM",
     "funding": "https://github.com/sponsors/Azarem",
