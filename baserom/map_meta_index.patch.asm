@@ -3,14 +3,10 @@
 
 ?BANK 4
 
-;?INCLUDE 'chunk_008000'
 ?INCLUDE 'chunk_048000'
 ?INCLUDE 'chunk_018000'
 ?INCLUDE 'map_meta'
 
-;music_load_stub:
-;    JSR $&code_0085F6
-;    RTL
 
 ------------------------------------
 ;Adjustment for map meta searching

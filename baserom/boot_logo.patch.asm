@@ -15,8 +15,7 @@ mapMeta_01C1 [
 ?INCLUDE 'actor_04B187'
 -------------------------------------
 
-actor_04B187 [
-  actor < #00, #00, #40, #00, #00, {
+code_04B18C {
     LDA $09C0
     BNE boot_logo_enix
     COP [C8] ( @spm_boot_logos, #01 )
@@ -53,7 +52,6 @@ actor_04B187 [
     RTL 
   
   loc_04B1C8:
-  } 
-]
+}
 
 consolestring_04B1E7:

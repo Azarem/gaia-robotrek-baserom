@@ -1,13 +1,7 @@
 ;This patch contains miscellaneous changes to map/meta loading
 ;It also contains a fix for string font stamping so the raw bitmap can be moved
 
-!VMADDL                         2116
-!MDMAEN                         420B
-!A1T0L                          4302
-!DAS0L                          4305
-
 ?INCLUDE 'chunk_048000'
-?INCLUDE 'chunk_0B8000'
 
 ----------------------------
 ;Fix OddLocation calculation so that it works with any bank hi/lo
