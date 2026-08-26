@@ -156,11 +156,6 @@
                 "code_04F999": { "start": 326041, "end": 327604, "type": "Code" }
             }
         },
-        "chunk_058000": {
-            "parts": {
-                "actor_058DAB": { "start": 363947, "end": 392407, "type": "actor" }
-            }
-        },
         "chunk_068000": {
             "parts": {
                 "actor_068000": { "start": 425984, "end": 439965, "type": "actor" },
@@ -231,7 +226,66 @@
         "actor_04BD1D": { "start": 310557, "end": 310740, "type": "actor", "movable": true },
         "actor_04DB0D": { "start": 318221, "end": 318344, "type": "actor", "movable": true },
         "actor_058000": { "start": 360448, "end": 360482, "type": "actor", "movable": true },
-        "actor_05899B": { "start": 362907, "end": 362969, "type": "actor", "movable": true }
+        "actor_05899B": { "start": 362907, "end": 362969, "type": "actor", "movable": true },
+        "actor_058DAB": { "start": 363947, "end": 364636, "type": "actor", "movable": false },
+        "actor_05905C": { "start": 364636, "end": 365281, "type": "actor", "movable": false },
+        "actor_0592E1": { "start": 365281, "end": 365919, "type": "actor", "movable": true },
+        "actor_05955F": { "start": 365919, "end": 367453, "type": "actor", "movable": false },
+        "actor_059B5D": { "start": 367453, "end": 367927, "type": "actor", "movable": false },
+        "actor_059D37": { "start": 367927, "end": 368732, "type": "actor", "movable": false },
+        "actor_05A05C": { "start": 368732, "end": 368867, "type": "actor", "movable": true },
+        "actor_05A0E3": { "start": 368867, "end": 369054, "type": "actor", "movable": true },
+        "actor_05A19E": { "start": 369054, "end": 369137, "type": "actor", "movable": true },
+        "actor_05A1F1": { "start": 369137, "end": 369294, "type": "actor", "movable": true },
+        "actor_05A28E": { "start": 369294, "end": 369697, "type": "actor", "movable": true },
+        "actor_05A421": { "start": 369697, "end": 369807, "type": "actor", "movable": false },
+        "actor_05A48F": { "start": 369807, "end": 369966, "type": "actor", "movable": true },
+        "actor_05A52E": { "start": 369966, "end": 370020, "type": "actor", "movable": true },
+        "actor_05A564": { "start": 370020, "end": 370328, "type": "actor", "movable": true },
+        "actor_05A698": { "start": 370328, "end": 370475, "type": "actor", "movable": true },
+        "actor_05A72B": { "start": 370475, "end": 370784, "type": "actor", "movable": false },
+        "actor_05A860": { "start": 370784, "end": 371165, "type": "actor", "movable": true },
+        "actor_05A9DD": { "start": 371165, "end": 373347, "type": "actor", "movable": true },
+        "actor_05B263": { "start": 373347, "end": 374339, "type": "actor", "movable": true },
+        "actor_05B643": { "start": 374339, "end": 374636, "type": "actor", "movable": true },
+        "actor_05B76C": { "start": 374636, "end": 374661, "type": "actor", "movable": true },
+        "actor_05B785": { "start": 374661, "end": 375585, "type": "actor", "movable": false },
+        "actor_05BB21": { "start": 375585, "end": 376241, "type": "actor", "movable": false },
+        "actor_05BDB1": { "start": 376241, "end": 376825, "type": "actor", "movable": true },
+        "actor_05BFF9": { "start": 376825, "end": 376909, "type": "actor", "movable": false },
+        "actor_05C04D": { "start": 376909, "end": 377985, "type": "actor", "movable": true },
+        "actor_05C481": { "start": 377985, "end": 378283, "type": "actor", "movable": true },
+        "actor_05C5AB": { "start": 378283, "end": 378332, "type": "actor", "movable": true },
+        "actor_05C5DC": { "start": 378332, "end": 378445, "type": "actor", "movable": true },
+        "actor_05C64D": { "start": 378445, "end": 379686, "type": "actor", "movable": true },
+        "actor_05CB26": { "start": 379686, "end": 379873, "type": "actor", "movable": true },
+        "actor_05CBE1": { "start": 379873, "end": 380474, "type": "actor", "movable": true },
+        "actor_05CE3A": { "start": 380474, "end": 381535, "type": "actor", "movable": false },
+        "actor_05D25F": { "start": 381535, "end": 381624, "type": "actor", "movable": true },
+        "actor_05D2B8": { "start": 381624, "end": 381755, "type": "actor", "movable": true },
+        "actor_05D33B": { "start": 381755, "end": 381879, "type": "actor", "movable": true },
+        "actor_05D3B7": { "start": 381879, "end": 382011, "type": "actor", "movable": true },
+        "actor_05D43B": { "start": 382011, "end": 382053, "type": "actor", "movable": true },
+        "actor_05D465": { "start": 382053, "end": 383403, "type": "actor", "movable": true },
+        "actor_05D9AB": { "start": 383403, "end": 384275, "type": "actor", "movable": false },
+        "actor_05DD13": { "start": 384275, "end": 384351, "type": "actor", "movable": false },
+        "actor_05DD5F": { "start": 384351, "end": 384521, "type": "actor", "movable": false },
+        "actor_05DE09": { "start": 384521, "end": 384857, "type": "actor", "movable": true },
+        "actor_05DF59": { "start": 384857, "end": 386445, "type": "actor", "movable": false },
+        "actor_05E58D": { "start": 386445, "end": 387206, "type": "actor", "movable": false },
+        "actor_05E886": { "start": 387206, "end": 387528, "type": "actor", "movable": true },
+        "actor_05E9C8": { "start": 387528, "end": 387839, "type": "actor", "movable": true },
+        "actor_05EAFF": { "start": 387839, "end": 388257, "type": "actor", "movable": false },
+        "actor_05ECA1": { "start": 388257, "end": 388372, "type": "actor", "movable": true },
+        "actor_05ED14": { "start": 388372, "end": 388448, "type": "actor", "movable": true },
+        "actor_05ED60": { "start": 388448, "end": 388456, "type": "actor", "movable": true },
+        "actor_05ED68": { "start": 388456, "end": 388487, "type": "actor", "movable": true },
+        "actor_05ED87": { "start": 388487, "end": 389688, "type": "actor", "movable": false },
+        "actor_05F238": { "start": 389688, "end": 390690, "type": "actor", "movable": true },
+        "actor_05F622": { "start": 390690, "end": 390790, "type": "actor", "movable": true },
+        "actor_05F686": { "start": 390790, "end": 391238, "type": "actor", "movable": false },
+        "actor_05F846": { "start": 391238, "end": 392171, "type": "actor", "movable": true },
+        "actor_05FBEB": { "start": 392171, "end": 392407, "type": "actor", "movable": false }
     },
     "credits": {
         "actor_04B837": { "start": 309303, "end": 309377, "type": "actor", "scene": "credits_heroes", "movable": true },
@@ -338,7 +392,7 @@
         "actor_058022": { "start": 360482, "end": 360589, "type": "actor", "scene": "rococo", "movable": true },
         "actor_05808D": { "start": 360589, "end": 360985, "type": "actor", "scene": "rococo", "movable": true },
         "actor_058219": { "start": 360985, "end": 362907, "type": "actor", "scene": "rococo", "movable": true },
-        "actor_0589D9": { "start": 362969, "end": 363947, "type": "actor", "scene": "rococo", "movable": true }
+        "actor_0589D9": { "start": 362969, "end": 363947, "type": "actor", "scene": "rococo", "movable": false }
 
     },
     "boot": {
