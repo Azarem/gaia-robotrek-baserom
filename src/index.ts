@@ -36,7 +36,7 @@ import transformsJP from '../jp/transforms.json' with { type: 'json' };
 import fileTypesJP from '../us/fileTypes.json' with { type: 'json' };
 
 export const db : DbGameRomModule = {
-    mnemonics,
+    mnemonics: { ...snes.vectors, ...mnemonics },
     overrides: overrides as unknown as Record<string, Record<string, number>>,
     rewrites,
     blocks: blocks as unknown as Record<string, Record<string, Partial<DbBlock>>>,
@@ -54,7 +54,7 @@ export const db : DbGameRomModule = {
 };
 
 export const jp : DbGameRomModule = {
-    mnemonics: mnemonicsJP,
+    mnemonics: { ...snes.vectors, ...mnemonicsJP },
     overrides: overridesJP as unknown as Record<string, Record<string, number>>,
     rewrites: rewritesJP,
     blocks: blocksJP as unknown as Record<string, Record<string, Partial<DbBlock>>>,
@@ -91,22 +91,22 @@ export async function extractJP(romPath: string, outPath: string) {
 
 export async function rebuild(inPath: string, outPath: string, baseRomPath: string, modulePaths?: string[]) {
     if(!inPath) inPath = './extracted';
-    if(!outPath) outPath = './rebuilt';
+    if(!outPath) outPath = `./rebuilt/${process.env.ROM_NAME ?? 'Robotrek - Rebuilt'}.smc`;
     if(!baseRomPath) baseRomPath = join(__pkgRoot, 'baserom');
     
     var dbRoot = DbRootUtils.fromGameModule(db);
 
-    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], `${outPath}/Robotrek-Rebuilt.smc`);
+    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], outPath);
 }
 
 export async function rebuildJp(inPath: string, outPath: string, baseRomPath: string, modulePaths?: string[]) {
     if(!inPath) inPath = './extracted-jp';
-    if(!outPath) outPath = './rebuilt-jp';
+    if(!outPath) outPath = `./rebuilt-jp/${process.env.ROM_NAME_JP ?? 'Slap Stick - Rebuilt'}.smc`;
     if(!baseRomPath) baseRomPath = join(__pkgRoot, 'baserom-jp');
     
     var dbRoot = DbRootUtils.fromGameModule(jp);
 
-    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], `${outPath}/SlapStick-Rebuilt.smc`);
+    await DbRootUtils.rebuildAllContent(dbRoot, [inPath, baseRomPath, ...(modulePaths || [])], outPath);
 }
 
 // CLI handler - only execute when run directly (not when imported as a module)
