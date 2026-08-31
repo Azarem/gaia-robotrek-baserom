@@ -30,10 +30,10 @@
             "NUM": { "id": 5, "types": [ "Byte", "Offset" ] },
             "DEC": { "id": 6, "types": [ "Byte", "Byte", "Offset" ] },
             "BOX": { "id": 7, "types": [ "Byte", "Byte", "Word" ] },
-            "08": { "id": 8, "types": [ "Word" ] },
+            "CLR": { "id": 8, "types": [ "Word" ] },
             "FIL": { "id": 9, "types": [ "Byte", "Offset" ] },
             "0A": { "id": 10, "types": [ "Binary" ], "delimiter": 255 },
-            "0B": { "id": 11, "types": [ "Byte" ] },
+            "BOR": { "id": 11, "types": [ "Byte" ] },
             "0C": { "id": 12, "types": [ ] },
             "N": { "id": 13, "types": [ ] },
             "0E": { "id": 14, "types": [ ] }

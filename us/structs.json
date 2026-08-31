@@ -159,7 +159,15 @@
         "delimiter": 65535,
         "types": [ "Word", "Word", "Word", "&sprite_group2" ]
     },
+    "sprite_end": {
+        "parent": "sprite_part",
+        "discriminator": 65535,
+        "types": [ ]
+    },
     "sprite_group": {
+        "discriminator": 8,
+        "discriminatorLogic": "&",
+        "parent": "sprite_part",
         "types": [ "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "Byte", "sprite_part" ]
     },
     "sprite_group2": {
@@ -172,11 +180,6 @@
     "sprite_part2": {
         "discriminator": 0,
         "types": [ "Byte", "Byte", "Byte", "Word" ]
-    },
-    "sprite_end": {
-        "parent": "sprite_part",
-        "discriminator": 65535,
-        "types": [ ]
     },
     "sprite_end2": {
         "parent": "sprite_part2",

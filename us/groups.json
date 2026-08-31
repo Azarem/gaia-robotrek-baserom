@@ -40,7 +40,26 @@
             "robot_factory": { "id": 440 }
         }
     },
-    "fathers_house": {
+    "mayors_house": {
+        "scenes": {
+            "mayors_reception": { "id": 216 },
+            "mayors_office": { "id": 217 },
+            "mayors_foyer": { "id": 218 },
+            "mayors_library": { "id": 219 },
+            "mayors_hallway": { "id": 220 },
+            "mayors_lobby": { "id": 221 },
+            "mayors_study": { "id": 222 },
+            "mayors_quarters": { "id": 223 },
+            "mayors_landing": { "id": 224 },
+            "mayors_storeroom": { "id": 225 },
+            "mayors_north_hall": { "id": 226 },
+            "mayors_stairwell": { "id": 227 },
+            "mayors_mouse_passage": { "id": 228 },
+            "mayors_mouse_north": { "id": 229 },
+            "mayors_rooftop": { "id": 230 }
+        }
+    },
+    "central_continent": {
         "scenes": {
             "fathers_yard": { "id": 23 },
             "fathers_house": { "id": 25 },
@@ -274,23 +293,6 @@
             "map_D5": { "id": 213 },
             "map_D6": { "id": 214 },
             "map_D7": { "id": 215 },
-            "map_D8": { "id": 216 },
-            "map_D9": { "id": 217 },
-            "map_DA": { "id": 218 },
-            "map_DB": { "id": 219 },
-            "map_DC": { "id": 220 },
-            "map_DD": { "id": 221 },
-            "map_DE": { "id": 222 },
-            "map_DF": { "id": 223 },
-            "map_E0": { "id": 224 },
-            "map_E1": { "id": 225 },
-            "map_E2": { "id": 226 },
-            "map_E3": { "id": 227 },
-            "map_E4": { "id": 228 },
-            "map_E5": { "id": 229 },
-            "map_E6": { "id": 230 },
-            
-
             "map_EB": { "id": 235 },
             "map_EC": { "id": 236 },
             "map_ED": { "id": 237 },

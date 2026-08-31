@@ -1,6 +1,6 @@
 {
     "name": "@gaialabs/robotrek-baserom",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "type": "module",
     "description": "GaiaLabs Robotrek Base ROM",
     "funding": "https://github.com/sponsors/Azarem",
@@ -36,7 +36,7 @@
         "analyze-cop": "node --experimental-strip-types scripts/analyze_cop_system.ts"
     },
     "dependencies": {
-        "@gaialabs/core": "0.2.27"
+        "@gaialabs/core": "0.2.28"
     },
     "devDependencies": {
         "@types/node": "^20.19.29",

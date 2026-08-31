@@ -255,7 +255,7 @@ loc_04899B {
     JSR $&code_0489DA
     LDA $0806
     BIT #$02
-    BEQ loc_048A34
+    BEQ tilemap_size_jmp
     LDX #$F000
     STX $42
     LDA #$7E
@@ -265,7 +265,11 @@ loc_04899B {
     LDA #$7E
     STA $48
     JSR $&code_048F5A
-    BRA loc_048A34
+
+  tilemap_size_jmp:
+    JMP loc_048A34
+
+
 }
 
 code_0489DA {
