@@ -1,6 +1,6 @@
 # Robotrek COP system overview
 
-_Canonical docs for deep-audited COP `$00`–`$57`. Family pages live under [`families/`](families/). Continued `$58+` analysis lives in [`cop_actor_analysis.md`](../cop_actor_analysis.md)._
+_Canonical docs for deep-audited COP `$00`–`$A1`. Family pages live under [`families/`](families/). Continued `$A2+` analysis lives in [`cop_actor_analysis.md`](../cop_actor_analysis.md)._
 
 ## Overview
 
@@ -18,12 +18,12 @@ Robotrek scene logic is driven by **actors**: small scripted objects with a 5-by
 
 | Item | Value |
 |------|-------|
-| Deep-audited opcodes | `$00`–`$57` (88 slots) |
-| Call sites (sum of per-op counts) | **11427** |
-| Family documents | 19 |
-| `$58+` workspace | [`docs/cop_actor_analysis.md`](../cop_actor_analysis.md) |
+| Deep-audited opcodes | `$00`–`$A1` (162 slots) |
+| Call sites (sum of per-op counts) | **18475** |
+| Family documents | 39 |
+| `$A2+` workspace | [`docs/cop_actor_analysis.md`](../cop_actor_analysis.md) |
 
-## Instruction families (`$00`–`$57`)
+## Instruction families (`$00`–`$A1`)
 
 Families are grouped by **shared handlers / memory**, not by jump-table order. Several false neighbors are called out below.
 
@@ -47,7 +47,27 @@ Families are grouped by **shared handlers / memory**, not by jump-table order. S
 | **Collision / solid** | `44` `45` `46` `47` `48` `49` | [collision.md](families/collision.md) | 905 |
 | **Metatile id (branch + write + scan)** | `4A` `4B` `4C` `4D` `4E` `4F` `50` | [metatiles.md](families/metatiles.md) | 272 |
 | **Movement / walk steps** | `51` `52` `53` `54` `55` | [movement.md](families/movement.md) | 1851 |
-| **Tracked IDs** | `56` `57` | [tracked_ids.md](families/tracked_ids.md) | 56 |
+| **Tracked IDs** | `56` `57` `58` `5A` `5B` | [tracked_ids.md](families/tracked_ids.md) | 143 |
+| **Focus / Interact Binding** | `59` `7E` | [focus_interact.md](families/focus_interact.md) | 17 |
+| **Currency (GP)** | `5C` `5D` `5E` | [currency.md](families/currency.md) | 18 |
+| **Shop** | `5F` | [shop.md](families/shop.md) | 7 |
+| **Progression (EXP / Level)** | `60` `61` | [progression.md](families/progression.md) | 35 |
+| **Party Check** | `62` | [party_check.md](families/party_check.md) | 233 |
+| **Interact Wait** | `63` `64` | [interact_wait.md](families/interact_wait.md) | 334 |
+| **Menu / Save** | `65` `66` `67` | [menu.md](families/menu.md) | 10 |
+| **Camera** | `68` `69` `6A` `6B` `6C` `6D` | [camera.md](families/camera.md) | 122 |
+| **NPC Lifecycle** | `6E` `6F` `70` | [npc_lifecycle.md](families/npc_lifecycle.md) | 29 |
+| **Combat / Encounter** | `71` `72` `73` | [combat.md](families/combat.md) | 88 |
+| **Spawn Gate** | `74` `75` `76` | [spawn_gate.md](families/spawn_gate.md) | 385 |
+| **BCD Counter** | `77` `78` | [bcd_counter.md](families/bcd_counter.md) | 19 |
+| **Spawn Effect** | `79` | [spawn_effect.md](families/spawn_effect.md) | 7 |
+| **Proximity 3-Way** | `7A` `7B` | [proximity_3way.md](families/proximity_3way.md) | 9 |
+| **Companion Sprite** | `7C` `7D` | [companion_sprite.md](families/companion_sprite.md) | 23 |
+| **Unused Ops** | `7F` | [unused_ops.md](families/unused_ops.md) | 0 |
+| **Animation Setup** | `80` `81` `82` `83` `84` `85` `86` `87` `88` `89` `8A` `8B` `8C` | [anim_setup.md](families/anim_setup.md) | 2220 |
+| **Child Sprite Spawn** | `8D` `8E` `8F` `90` | [child_sprite.md](families/child_sprite.md) | 60 |
+| **Render Configuration** | `91` `92` `93` `94` `95` `96` `9D` `9E` `9F` `A0` `A1` | [render_config.md](families/render_config.md) | 204 |
+| **Animation Wait / Tick** | `97` `98` `99` `9A` `9B` `9C` | [anim_wait.md](families/anim_wait.md) | 3141 |
 
 ### Why these family boundaries
 
@@ -69,7 +89,27 @@ Families are grouped by **shared handlers / memory**, not by jump-table order. S
 - **Collision / solid** (`44`, `45`, `46`, `47`, `48`, `49`): Occupy or vacate cells in `$7FA000`, and probe terrain / blocked state. High nibble `#$F0` = actor solid; low nibble = terrain type.
 - **Metatile id (branch + write + scan)** (`4A`, `4B`, `4C`, `4D`, `4E`, `4F`, `50`): Branch on or rewrite per-cell metatile ids in `$7EA000`, with graphics from `$7E2000+id×8` and collision refresh via `code_0AF5A4`. `[50]` cooperatively redraws a rectangle row-by-row.
 - **Movement / walk steps** (`51`, `52`, `53`, `54`, `55`): Scripted walk packets and the shared step bracket (`[51]` begin / `[52]` end). Wander `[28]`/`[29]` consumes the same bracket.
-- **Tracked IDs** (`56`, `57`): Claim/release globally tracked instance ids in `$7E4102` / `$7E4192`.
+- **Tracked IDs** (`56`, `57`, `58`, `5A`, `5B`): Claim, release, capacity-check, and branch-test globally tracked instance ids in `$7E4102` / `$7E4192` and the focus id `$0676`. `[58]` pre-checks free slot count; `[5A]` tests table A + focus; `[5B]` tests focus only (73 uses — highest in this family).
+- **Focus / Interact Binding** (`59`, `7E`): Bind per-actor focus/interact descriptors (`$7F002C` / `$7F002A` / `$7F1036`) consumed by interact dispatcher `code_0BE902` and zone tick scanner `code_0BF239`. `[59]` writes the binding (12 sites); `[7E]` polls the deferred-interact latch `$7F1036` and jumps to the callback address when set (5 sites). Shares `$0676` focus id with tracked_ids but writes actor RAM, not the global tables.
+- **Currency (GP)** (`5C`, `5D`, `5E`): Add, spend, and test gold points via 5-digit BCD counter at `$06E6`/`$06E8`. `[5C]` awards (saturates at 99999); `[5D]` deducts (branches on insufficient funds) with `#$FFFF` sentinel to zero GP; `[5E]` non-destructively tests affordability (subtract-then-add round-trip) and branches if affordable.
+- **Shop** (`5F`): Configure shop inventory by writing 5 item IDs + mode byte into `$0B86`–`$0B92` and setting flag `#$000E`. All 7 call sites configure NPC shop inventories gated by map/flag checks.
+- **Progression (EXP / Level)** (`60`, `61`): Award EXP ("Megs of data") and test player level. `[60]` adds BCD EXP, displays a message, triggers level-up if threshold crossed (unused — combat awards EXP instead). `[61]` branches when level ≥ threshold; exclusively used in 35 treasure-chest actors with level-gated rewards.
+- **Party Check** (`62`): Test robot companion count by checking hardcoded IDs `#$004C`/`#$004D` in focus slots `$0676`/`$0678`. All 233 call sites require exactly 2 companions (`#$0002`), gating NPC dialog and area access.
+- **Interact Wait** (`63`, `64`): Yield until the player is adjacent to and facing this actor, then turn to face the player and resume at `&Code`. `[63]` uses animation base 0; `[64]` takes a Byte operand for alternate sprite sheets. Combined 334 call sites — the primary NPC "idle → ready to talk" primitive.
+- **Menu / Save** (`65`, `66`, `67`): Open full-screen menu screens and write save data. `[65]` invokes the status/diary/save menu (`code_04BF87`). `[66]` invokes the robot program/equipment config menu (`code_04C305`). Both share the same handler wrapper. `[67]` plays save SFX and block-copies game state to SRAM via `code_0AF2E4`. All used in system-level code only.
+- **Camera** (`68`, `69`, `6A`, `6B`, `6C`, `6D`): Camera scroll, screen bounds, and visual effects for cinematics. `[68]` spawns a child scroll actor for camera pans (mode `#00` = init, `#01` = chain); `[69]` returns the camera to the saved position. `[6A]` configures screen scroll bounds via interpolation (shake/viewport). `[6B]` is a conditional "phase 2" scroll that waits for a flag then interpolates bounds to their final position, clearing flag `#$0322`. `[6C]` spawns a child actor for timed screen flash effects using SNES color math/windowing registers. `[6D]` applies a vertical camera jitter by adding Y offsets from a 4-entry lookup for `$30` frames — the most-used camera op (45 sites). All call sites are in cinematic contexts.
+- **NPC Lifecycle** (`6E`, `6F`, `70`): Conditional spawn gating and idle-loop removal for NPCs. `[6E]` tests flag `#$000F` at init — if set, instantly destroys the actor. `[6F]` tests the same flag every idle-loop iteration — if set, redirects to `code_04BE0E` (walk-off-screen-and-destroy animation). `[6F]` also gates on `$06 bit #$4000` (interaction-busy). `[70]` is an unused simplified variant without the flag test. All 29 call sites are in NPC actors (Rococo town and map 139).
+- **Combat / Encounter** (`71`, `72`, `73`): Pre-battle setup, in-battle polling, and post-battle result dispatch. `[73]` is the encounter gate — it checks a story flag to skip already-won battles, manages the battle slot table (`$7E3E20`–`$7E3ED4`, 30 slots), and dispatches to win/lose handlers. `[72]` saves the actor's script position into the slot table and yields until the battle result (`$7E3ED4,X`) is written by `actor_0BF77D`. `[71]` is a specialized NPC cleanup op that clears collision and destroys the actor when combat is active (`$06 bit #$4000`). Nearly every boss and overworld enemy actor uses `[73]` + `[72]`; `[71]` is limited to Prinky's Mansion east wing (13 sites, 2 actors).
+- **Spawn Gate** (`74`, `75`, `76`): Conditional actor spawn gates that test a condition at init and destroy the actor before it appears if the condition fails. `[75]` is the single-flag gate (271 uses) — the most common spawn-time conditional, with bit 15 encoding polarity (85% use `#$8xxx` = destroy when flag IS set). `[74]` evaluates a boolean expression over multiple flags (108 uses) using AND/OR/AND-NOT operators encoded in bits 11–15 of each word. `[76]` tests the current map id (6 uses) — the actor destroys itself if on (or not on) a specific map. All three share `code_04FD4E` (self-destruct) on the destroy path. Related to `[6E] npc_spawn_gate` (hardcoded flag `#$000F`) and `[0B] branch_if_flag` (runtime branch vs. spawn-time destroy).
+- **BCD Counter** (`77`, `78`): General-purpose BCD (decimal-mode) counters stored at `$7E4222`. `[78]` sets/adds/subtracts a counter value and `[77]` compares a counter against a BCD threshold and branches. Used for scene-specific tracking that isn't covered by flags: visit counts (Prinky's Mansion), donation totals (Chino building fund, target 9000 GP). Only 2 counter indices are observed (0 and 2). Counters are **not saved to SRAM** — they reset on scene change.
+- **Spawn Effect** (`79`): Spawns a child particle/sprite effect at a tile position with optional movement delta. The child runs a hardcoded animation loop at `loc_04C7E5`, plays SFX, and self-destructs after a countdown. Used for cutscene effects: inventor sparks, earthquake rubble, credits animations. 7 sites across 7 files.
+- **Proximity 3-Way** (`7A`, `7B`): Three-way axis proximity branches — compare player distance from the actor along X (`[7A]`) or Y (`[7B]`) against a pixel threshold and dispatch to one of three code targets: far-negative (left/above), near (within threshold), or far-positive (right/below). Uses the same player-position globals (`$0BA6`/`$0BA8`) as the `[0E]`–`[16]` proximity family. `[7A]` is used for horizontal patrol/approach (7 sites); `[7B]` only by system actor `actor_0C8000` for vertical checks (2 sites), always cascaded with `[7A]` for 2D quadrant dispatch.
+- **Companion Sprite** (`7C`, `7D`): Manage the robot companion's visual appearance by switching spritemap banks on the companion actor at `$0EEE`. `[7C]` conditionally resets the companion sprite when `$0676 == #$004C` (21 sites, used as a cleanup guard after dungeons/battles). `[7D]` directly switches between two spritemap banks: `spritemap_0E8000` (normal, byte=0) and `spritemap_0EC000` (alternate/transformed, byte=1), and updates secondary focus `$0678` accordingly. Only 2 `[7D]` sites, both in `volcano_base/base_einst_house` (Dr. Einst robot transformation scene).
+- **Unused Ops** (`7F`): The sole invalid slot in the 251-entry COP jump table. Entry is `#$FFFF`, which would jump to `$00:FFFF` (interrupt vector area) and crash. Not in copdef.json, 0 call sites. Every other copdef-missing opcode still has a valid handler — `[7F]` is uniquely dead. Likely an intentional reservation at the `$7E`/`$80` boundary.
+- **Animation Setup** (`80`–`8C`): Thirteen opcodes that configure actor animation state. The core eight (`[80]`–`[87]`) form a combinatorial set (3-bit `speed/vel_x/vel_y`). Five extended variants: `[88]` primes step counter `$0E24`; `[89]`/`[8A]` do facing-conditional id selection via `$0A bit #$4000` (with/without speed); `[8B]` reloads spritemap via `code_08F322` and sets render flag `$08 |= #$0800`; `[8C]` sets velocity + acceleration (`$34`/`$36`) via `code_00E39E`/`code_00E3AC`. `[80]` is the **#1 most-used COP** (1247 sites). Total: 2220 call sites — the largest family by usage count.
+- **Child Sprite Spawn** (`8D`–`90`): Spawn a child rendering actor for visual effects (projectiles, explosions, companion sprites). All four allocate a child slot via `code_04FDDD`, load spritemap/animation data, and render via `code_08E757` + `code_08E805`. `[8D]`/`[8E]` are guarded (check if child alive via `code_00E616`, skip if so) and continue the script; `[8F]`/`[90]` always spawn and yield. `[8E]`/`[90]` read extra tile data into `$7F0D60,X`. `[8F]` is the most common (40 sites). Parent→child link stored in `$7F0020,X`. Total: 60 call sites.
+- **Animation Wait / Tick** (`97`–`9C`): Six parameterless yield/wait ops that block the script until an animation, frame count, or child sprite condition completes. Five use the shared animation frame-advance helper `code_04FC71`; `[9C]` uses the child-alive guard `code_00E616`. `[97]` (wait_anim_done, 2076 sites) is the #3 most-used COP overall. `[98]` (wait_anim_frames, 931 sites) loops `$12` times through `code_04FC71` within one handler call. `[99]` (wait_anim_clear_sprmap, 33 sites) is tightly coupled to `[8B]` — clears `$08 bit #$0800` after one frame. `[9A]` (anim_until_interact_destroy, 46 sites) loops until animation ends or `$06 bit #$4000` is set, then self-destructs via `code_04FD4E`. `[9B]` (anim_step_tick, 2 sites) is the companion to `[88]` — uses `$0E24` step counter. `[9C]` (child_wait, 53 sites) blocks until the child sprite dies. Total: 3141 call sites — the **largest family by far**.
+- **Render Configuration** (`91`–`96`, `9D`–`A1`): Configure actor rendering mode and drive render ticks. Setup ops (`[91]`–`[96]`) assign spritemap banks (24-bit pointer `$7F0000,X`/`$7F0002,X`, render flag `$08 |= #$4000`) and bitmap overlays (`$7F002E,X`/`$7F0030,X` via `word_04B879` table). `[93]`/`[94]` additionally spawn a child rendering actor via `code_00E55E`. `[9D]` copies 32 bytes of OAM staging data (`$7F:0A00` → `$7E:3800`) via MVN. Wait ops tick rendering forward: `[9E]`/`[9F]` call `code_08E665` (DMA setup) + `code_08E59D` (spritemap render tick) and restore flags (`$08 &= ~#$4000`, `$06 |= #$2000`); `[A0]`/`[A1]` call `code_08E69B` (bitmap render tick). `[9F]`/`[A1]` are multi-frame variants that loop `$12` times. `[96]` and `[A1]` are unused. Total: 204 call sites.
 
 ### False neighbors (do not merge)
 
@@ -85,36 +125,63 @@ Families are grouped by **shared handlers / memory**, not by jump-table order. S
 | `[49]` ↔ `[4A]` | `$7FA000` collision probe vs `$7EA000` metatile branch |
 | `[4F]` ↔ `[50]` ↔ `[51]` | unused refresh vs **row scan** vs **step_begin** |
 | `[55]` ↔ `[56]` | walk_seeks vs **claim_id** tables |
+| `[58]` ↔ `[59]` | table capacity check vs **per-actor focus binding** |
+| `[5B]` ↔ `[5C]` | focus id branch vs **GP add** (completely unrelated) |
+| `[5E]` ↔ `[5F]` | GP affordability test vs **shop inventory** config |
+| `[5F]` ↔ `[60]` | shop slots vs **EXP award** |
+| `[61]` ↔ `[62]` | level branch vs **companion count** (both branch but different state) |
+| `[62]` ↔ `[63]` | companion count vs **adjacency yield** |
+| `[64]` ↔ `[65]` | adjacency yield (anim) vs **menu open** |
+| `[65]` ↔ `[66]` ↔ `[67]` | same menu family: status, robot config, save |
+| `[67]` ↔ `[68]` | save game vs **camera scroll** |
+| `[6A]` ↔ `[6B]` | screen_shake (sets `#$8322`) vs camera_scroll_await (clears `#$0322`) — same family but distinct phases |
+| `[6B]` ↔ `[6C]` | scroll-bound interpolation vs **screen flash child** (different mechanisms) |
+| `[6D]` ↔ `[6E]` | camera Y jitter vs **NPC spawn gate** (completely unrelated) |
+| `[70]` ↔ `[71]` | NPC busy-wait (lifecycle) vs **combat solid gate** (battle system) |
+| `[73]` ↔ `[74]` | encounter gate (combat) vs **flag expression spawn gate** (different families; both can destroy actor but for unrelated reasons) |
+| `[78]` ↔ `[79]` | BCD counter set/add vs **spawn effect** (sequential opcodes but completely unrelated systems) |
+| `[79]` ↔ `[7A]` | spawn effect vs **proximity 3-way branch** (unrelated; `[7A]`/`[7B]` are sibling to `[0E]`–`[16]` proximity, not to `[79]`) |
+| `[7B]` ↔ `[7C]` | vertical proximity branch vs **companion sprite reset** (different families despite adjacency) |
+| `[7D]` ↔ `[7E]` | companion sprite set vs **deferred interact resume** (`[7E]` belongs to focus_interact family with `[59]`, not companion_sprite) |
+| `[7E]` ↔ `[7F]` | deferred interact resume vs **unused crash** (live opcode vs dead slot) |
+| `[7F]` ↔ `[80]` | unused crash vs **animation setup** (dead slot boundary before the animation family) |
+| `[87]` ↔ `[88]` | Same family but different mechanism: `[80]`–`[87]` are the combinatorial core; `[88]` adds step counter `$0E24` side-effect |
+| `[89]` ↔ `[8A]` | Same family — `[8A]` falls through to `[89]`'s handler, adding a speed byte |
+| `[8C]` ↔ `[8D]` | animation setup (accel) vs **child sprite spawn** (different system — anim config vs child actor allocation) |
+| `[90]` ↔ `[91]` | child sprite spawn (allocates via `code_04FDDD`) vs **render config** (sets spritemap bank pointer + render mode flags — different mechanism) |
+| `[96]` ↔ `[97]` | bitmap overlay setup (render_config) vs **animation wait** (different system — setup vs wait/tick) |
+| `[9C]` ↔ `[9D]` | child_wait (anim_wait family) vs **OAM copy** (render_config family — different system; `[9C]` checks child alive, `[9D]` does MVN block copy) |
+| `[A1]` ↔ `[A2]` | bitmap render wait (render_config) vs next family (TBD) |
 
-## Top opcodes by usage (`$00`–`$57`)
+## Top opcodes by usage (`$00`–`$A1`)
 
 | Rank | Op | Name | Uses | Family |
 |-----:|----|------|-----:|--------|
-| 1 | `1D` | `show_dialog` | 1754 | [dialog](families/dialog.md) |
-| 2 | `0A` | `set_flag` | 1077 | [event_flags](families/event_flags.md) |
-| 3 | `0B` | `branch_if_flag` | 863 | [event_flags](families/event_flags.md) |
-| 4 | `51` | `step_begin` | 662 | [movement](families/movement.md) |
-| 5 | `52` | `step_end` | 662 | [movement](families/movement.md) |
-| 6 | `22` | `set_interact` | 560 | [interact](families/interact.md) |
-| 7 | `44` | `solid_on` | 453 | [collision](families/collision.md) |
-| 8 | `34` | `mask_input` | 337 | [input](families/input.md) |
-| 9 | `54` | `walk_to_y` | 281 | [movement](families/movement.md) |
-| 10 | `33` | `unmask_input` | 278 | [input](families/input.md) |
-| 11 | `41` | `queue_sfx_3` | 277 | [audio](families/audio.md) |
-| 12 | `05` | `repeat_begin` | 233 | [control_flow](families/control_flow.md) |
-| 13 | `06` | `repeat_yield` | 219 | [control_flow](families/control_flow.md) |
-| 14 | `0C` | `branch_if_flags` | 214 | [event_flags](families/event_flags.md) |
-| 15 | `1F` | `show_dialog_now` | 213 | [dialog](families/dialog.md) |
-| 16 | `45` | `solid_off` | 213 | [collision](families/collision.md) |
-| 17 | `53` | `walk_to_x` | 202 | [movement](families/movement.md) |
-| 18 | `27` | `queue_player_script` | 167 | [control_flow](families/control_flow.md) |
-| 19 | `32` | `set_focus_id` | 146 | [ui_focus](families/ui_focus.md) |
-| 20 | `10` | `branch_if_at_xy_facing` | 145 | [proximity](families/proximity.md) |
-| 21 | `46` | `solid_on_at` | 145 | [collision](families/collision.md) |
-| 22 | `00` | `gosub` | 143 | [control_flow](families/control_flow.md) |
-| 23 | `50` | `redraw_tile_rows` | 128 | [metatiles](families/metatiles.md) |
-| 24 | `17` | `teleport_xy_facing` | 127 | [map_placement](families/map_placement.md) |
-| 25 | `18` | `request_map` | 127 | [map_placement](families/map_placement.md) |
+| 1 | `97` | `wait_anim_done` | 2076 | [anim_wait](families/anim_wait.md) |
+| 2 | `1D` | `show_dialog` | 1754 | [dialog](families/dialog.md) |
+| 3 | `80` | `set_anim` | 1247 | [anim_setup](families/anim_setup.md) |
+| 4 | `0A` | `set_flag` | 1077 | [event_flags](families/event_flags.md) |
+| 5 | `98` | `wait_anim_frames` | 931 | [anim_wait](families/anim_wait.md) |
+| 6 | `0B` | `branch_if_flag` | 863 | [event_flags](families/event_flags.md) |
+| 7 | `51` | `step_begin` | 662 | [movement](families/movement.md) |
+| 8 | `52` | `step_end` | 662 | [movement](families/movement.md) |
+| 9 | `22` | `set_interact` | 560 | [interact](families/interact.md) |
+| 10 | `44` | `solid_on` | 453 | [collision](families/collision.md) |
+| 11 | `84` | `set_anim_spd` | 354 | [anim_setup](families/anim_setup.md) |
+| 12 | `34` | `mask_input` | 337 | [input](families/input.md) |
+| 13 | `63` | `wait_facing` | 311 | [interact_wait](families/interact_wait.md) |
+| 14 | `54` | `walk_to_y` | 281 | [movement](families/movement.md) |
+| 15 | `33` | `unmask_input` | 278 | [input](families/input.md) |
+| 16 | `41` | `queue_sfx_3` | 277 | [audio](families/audio.md) |
+| 17 | `75` | `gate_flag` | 271 | [spawn_gate](families/spawn_gate.md) |
+| 18 | `62` | `branch_if_companions` | 233 | [party_check](families/party_check.md) |
+| 19 | `05` | `repeat_begin` | 233 | [control_flow](families/control_flow.md) |
+| 20 | `86` | `set_anim_spd_vy` | 220 | [anim_setup](families/anim_setup.md) |
+| 21 | `06` | `repeat_yield` | 219 | [control_flow](families/control_flow.md) |
+| 22 | `0C` | `branch_if_flags` | 214 | [event_flags](families/event_flags.md) |
+| 23 | `1F` | `show_dialog_now` | 213 | [dialog](families/dialog.md) |
+| 24 | `45` | `solid_off` | 213 | [collision](families/collision.md) |
+| 25 | `53` | `walk_to_x` | 202 | [movement](families/movement.md) |
 
 
 ## Zero-use / missing-copdef slots in range
@@ -128,6 +195,11 @@ Families are grouped by **shared handlers / memory**, not by jump-table order. S
 | `40` | `apu_write_1` | uses=0; params=Byte (not in copdef) |
 | `43` | `queue_sfx_word` | uses=0; params=Word (not in copdef; unused) |
 | `4F` | `refresh_tile_at` | uses=0; params=Byte, Byte (not in copdef; unused) |
+| `60` | `award_exp` | uses=0; params=Word (not in copdef); handler fully traced |
+| `70` | `npc_busy_wait` | uses=0; params=Byte (not in copdef); simplified `[6F]` variant |
+| `7F` | `unused_crash` | uses=0; jump table entry `#$FFFF` → crashes if reached |
+| `96` | `set_bitmap_overlay_spd` | uses=0; speed variant of `[95]`; not in copdef |
+| `A1` | `bitmap_render_wait_multi` | uses=0; multi-frame bitmap wait; not in copdef |
 
 ## Memory map (script / actor relevant)
 
@@ -149,7 +221,7 @@ Addresses below are those most frequently touched by COP handlers and actor scri
 |--------|-----------------|---------|
 | `$7F001A,X` | **Single-level near gosub return** (also reused by `[27]` / `[37]`) | `COP [00]`/`[01]` primarily |
 | `$7F001C,X` / `$7F001E,X` | **Far gosub return PC / bank** | `COP [03]`/`[04]` |
-| `$7F000C,X` | Current animation id | `COP [80]`/`[84]`/`[85]`/`[86]` |
+| `$7F000C,X` | Current animation id | `COP [80]`–`[8C]` (anim_setup), `[91]`–`[96]` (render_config) |
 | `$7F0012,X` / `$7F0014,X` | Footprint W/H (tiles) for solid ops; also step/walk temps | `[44]`–`[49]` if `W+H≥3`; `[51]`/`[52]` |
 | `$7F000E,X` / `$7F0010,X` | Footprint origin offsets (multi-tile solid paint/probe) | `[44]`–`[49]` large path |
 | `$7F0020,X` (= DP `$20`) | **Multipurpose actor word** — chase-slot index for `[2F]`/`[30]`; also general counter (credits wait/`INC $20`) | Scripts + chase claim |
@@ -161,17 +233,19 @@ Addresses below are those most frequently touched by COP handlers and actor scri
 | `$7F101A,X` | **Move / step profile** (velocity-table band select) | `COP [2A]`; consumed by `code_00E3BA` / `code_00E420` |
 | `$7F101C,X` | Movement table base (copied from player on `[2C]` join) | Wander / follow step helpers |
 | `$7F1028,X` | **Follower slot index** (×2 into `$09CA`/`$09D6`) | `COP [2C]` claim; `[2D]` follow |
-| `$7F0DF0,X` / `$7F0E08,X` | Animation table pointers (player controller) | `actor_04B763` |
+| `$7F0000,X` / `$7F0002,X` | **Spritemap bank pointer** (24-bit: lo word / bank byte) — render_config `[91]`–`[94]` set to spritemap address; `[95]`/`[96]` set to `#$4800`/`#$007E` (VRAM dest) |
+| `$7F002E,X` / `$7F0030,X` | **Bitmap overlay pointer** (24-bit) — `[95]`/`[96]` set via `word_04B879` lookup into `rawbitmap_128FAE` |
+| `$7F0DF0,X` / `$7F0E08,X` | Spritemap table pointer (lo/bank) — used by child sprite spawn `[8D]`–`[90]` and player controller `actor_04B763` |
 
 #### `$7F` offsets referenced by COP handlers (by # of opcodes)
 
 | Address | #opcodes |
 |---------|----------|
-| `$7F000C` | 31 |
+| `$7F000C` | 37 |
 | `$7F0022` | 23 |
 | `$7F0008` | 13 |
-| `$7F0000` | 8 |
-| `$7F0002` | 8 |
+| `$7F0000` | 14 |
+| `$7F0002` | 14 |
 | `$7F0028` | 6 |
 | `$7F101A` | 6 |
 | `$7F200E` | 6 |
@@ -191,8 +265,8 @@ Addresses below are those most frequently touched by COP handlers and actor scri
 | `$7F1028` | 3 |
 | `$7F002A` | 3 |
 | `$7F0020` | 3 |
-| `$7F002E` | 3 |
-| `$7F0030` | 3 |
+| `$7F002E` | 5 |
+| `$7F0030` | 5 |
 | `$7F100C` | 3 |
 | `$7F000E` | 3 |
 | `$7F0016` | 3 |
@@ -233,12 +307,14 @@ Addresses below are those most frequently touched by COP handlers and actor scri
 | `$22` | Actor-local counter / mode — `COP [26]` switch; scripts `INC`/`STZ` |
 | `$20` | Same as `$7F0020` — chase-slot index (`ASL $09E2`) for `[2F]`/`[30]`, else free actor scratch | See chase / credits patterns |
 | `$0C` | Facing / step direction bits (`0`–`3` typical) | Snapshotted to `$0BAA` for proximity COPs |
+| `$0A` | Actor flags — bit `#$4000` = horizontal facing (used by `[89]` facing-conditional anim) |
 | `$0E` | Delay countdown (`COP [D0]`) |
 | `$10` / `$12` | Anim progress / frame counter |
 | `$1C` / `$1E` | Anim velocity / delta X/Y |
 | `$0BA6` / `$0BA8` | **Player cell X / Y** (`player.$00−8`, `player.$02−16`) | `[0E]`–`[15]` proximity family |
 | `$0BB2` / `$0BB4` | Player cell X/Y `>>4` (coarse) | Set alongside `$0BA6`/`$0BA8` in `code_00FA5E` |
 | `$0BAA` | **Player facing** (copy of player `$0C`) | Facing filter on `[0E]`/`[0F]`/`[10]`/… |
+| `$0E24` | **Animation step counter** — set by `COP [88]`, decremented by `COP [9B]`; also used as frame counter by engine (`chunk_048000.asm`) |
 | `$05A8` | **Current map / scene id** (`COP [1A]` / `branch_if_map`) | Loaded from pending `$05A6` |
 | `$0553` | Sticky latch cleared by `COP [1B]` (and a few system paths) | No reads found in extract |
 | `$05A6` | **Pending map id** for next load (`COP [18]`); cleared when consumed | → `$05A8` / `$05AA` on transition |
@@ -247,6 +323,8 @@ Addresses below are those most frequently touched by COP handlers and actor scri
 | `$05BC` / `$05C0` | Alternate camera target X/Y (non-zero → prefer over BA/BE) | Cleared by `[18]`; set via `[19]` apply path |
 | `$05E8`, `$05E0`–`$05E6` | **Deferred / alt** map-request block (`COP [19]`) | Promoted later (`code_008869` / combat return) |
 | `$0EEE` | **Player actor slot** (index into actor pool) | `[27]` targets this; set by player host |
+| `$0EE2` | **DMA slot bitmask** — `code_08E665` sets bit `#$0002` to prevent duplicate DMA queuing; used by `[9E]`/`[9F]` |
+| `$0EF6` | **Actor free-chain head** — `[93]`/`[94]` read to allocate child rendering actor via `code_00E55E` |
 | `$0004` / `$0006` | **Absolute scratch** for step anim bias — *not* DP actor `$04`/`$06` | `[28]`/`[29]` wander; `[2E]`/`[30]` follow/chase |
 | `$09C8` | **Follower occupancy bitmask** (bits 0–5, max 6) | `[2C]` claim / `[2D]`/`[2E]` release |
 | `$09CA` / `$09D6` | Follower track X/Y words (indexed by `$7F1028`) | Updated from player `$0BB6`/`$0BB8` |
@@ -358,7 +436,7 @@ Helpers:
 
 Scene logic runs as **actors**: a 5-byte header plus 65816/COP body. Common behavior classes (header field 2): `#49` NPC, `#69` object/trigger, `#68` cutscene director, `#48` prop, `#42` enemy, `#44` player host, `#60` UI. Full header distributions and `script_meta` spawn kinds remain in the [legacy monolith](../cop_actor_analysis.md#actor-types).
 
-## Opcode roster (`$00`–`$57`)
+## Opcode roster (`$00`–`$A1`)
 
 | Op | Name | Uses | Family |
 |----|------|-----:|--------|
@@ -442,6 +520,88 @@ Scene logic runs as **actors**: a 5-byte header plus 65816/COP body. Common beha
 | `4D` | `set_tile_at` | 84 | [metatiles](families/metatiles.md) |
 | `4E` | `draw_tile_at` | 6 | [metatiles](families/metatiles.md) |
 | `4F` | `refresh_tile_at` | 0 | [metatiles](families/metatiles.md) |
+| `50` | `redraw_tile_rows` | 128 | [metatiles](families/metatiles.md) |
+| `51` | `step_begin` | 662 | [movement](families/movement.md) |
+| `52` | `step_end` | 662 | [movement](families/movement.md) |
+| `53` | `walk_to_x` | 202 | [movement](families/movement.md) |
+| `54` | `walk_to_y` | 281 | [movement](families/movement.md) |
+| `55` | `walk_seeks` | 44 | [movement](families/movement.md) |
+| `56` | `claim_id` | 31 | [tracked_ids](families/tracked_ids.md) |
+| `57` | `release_id` | 25 | [tracked_ids](families/tracked_ids.md) |
+| `58` | `branch_if_slots_below` | 6 | [tracked_ids](families/tracked_ids.md) |
+| `59` | `set_focus_bind` | 12 | [focus_interact](families/focus_interact.md) |
+| `5A` | `branch_if_id_claimed` | 8 | [tracked_ids](families/tracked_ids.md) |
+| `5B` | `branch_if_focus_id` | 73 | [tracked_ids](families/tracked_ids.md) |
+| `5C` | `add_gp` | 7 | [currency](families/currency.md) |
+| `5D` | `spend_gp` | 7 | [currency](families/currency.md) |
+| `5E` | `branch_if_can_afford` | 4 | [currency](families/currency.md) |
+| `5F` | `load_shop_inventory` | 7 | [shop](families/shop.md) |
+| `60` | `award_exp` | 0 | [progression](families/progression.md) |
+| `61` | `branch_if_level_ge` | 35 | [progression](families/progression.md) |
+| `62` | `branch_if_companions` | 233 | [party_check](families/party_check.md) |
+| `63` | `wait_facing` | 311 | [interact_wait](families/interact_wait.md) |
+| `64` | `wait_facing_anim` | 23 | [interact_wait](families/interact_wait.md) |
+| `65` | `open_status_menu` | 4 | [menu](families/menu.md) |
+| `66` | `open_robot_config_menu` | 3 | [menu](families/menu.md) |
+| `67` | `save_game` | 3 | [menu](families/menu.md) |
+| `68` | `camera_scroll` | 44 | [camera](families/camera.md) |
+| `69` | `camera_return` | 10 | [camera](families/camera.md) |
+| `6A` | `screen_shake` | 15 | [camera](families/camera.md) |
+| `6B` | `camera_scroll_await` | 2 | [camera](families/camera.md) |
+| `6C` | `spawn_screen_effect` | 6 | [camera](families/camera.md) |
+| `6D` | `camera_y_shake` | 45 | [camera](families/camera.md) |
+| `6E` | `npc_spawn_gate` | 15 | [npc_lifecycle](families/npc_lifecycle.md) |
+| `6F` | `npc_idle_guard` | 14 | [npc_lifecycle](families/npc_lifecycle.md) |
+| `70` | `npc_busy_wait` | 0 | [npc_lifecycle](families/npc_lifecycle.md) |
+| `71` | `combat_solid_gate` | 13 | [combat](families/combat.md) |
+| `72` | `combat_result_poll` | 31 | [combat](families/combat.md) |
+| `73` | `encounter_gate` | 44 | [combat](families/combat.md) |
+| `74` | `gate_flag_expr` | 108 | [spawn_gate](families/spawn_gate.md) |
+| `75` | `gate_flag` | 271 | [spawn_gate](families/spawn_gate.md) |
+| `76` | `gate_map` | 6 | [spawn_gate](families/spawn_gate.md) |
+| `77` | `branch_if_counter` | 11 | [bcd_counter](families/bcd_counter.md) |
+| `78` | `set_counter` | 8 | [bcd_counter](families/bcd_counter.md) |
+| `79` | `spawn_effect` | 7 | [spawn_effect](families/spawn_effect.md) |
+| `7A` | `branch_x_3way` | 7 | [proximity_3way](families/proximity_3way.md) |
+| `7B` | `branch_y_3way` | 2 | [proximity_3way](families/proximity_3way.md) |
+| `7C` | `companion_sprite_reset` | 21 | [companion_sprite](families/companion_sprite.md) |
+| `7D` | `companion_sprite_set` | 2 | [companion_sprite](families/companion_sprite.md) |
+| `7E` | `resume_deferred_interact` | 5 | [focus_interact](families/focus_interact.md) |
+| `7F` | `unused_crash` | 0 | [unused_ops](families/unused_ops.md) |
+| `80` | `set_anim` | 1247 | [anim_setup](families/anim_setup.md) |
+| `81` | `set_anim_vx` | 78 | [anim_setup](families/anim_setup.md) |
+| `82` | `set_anim_vy` | 57 | [anim_setup](families/anim_setup.md) |
+| `83` | `set_anim_vxy` | 8 | [anim_setup](families/anim_setup.md) |
+| `84` | `set_anim_spd` | 354 | [anim_setup](families/anim_setup.md) |
+| `85` | `set_anim_spd_vx` | 149 | [anim_setup](families/anim_setup.md) |
+| `86` | `set_anim_spd_vy` | 220 | [anim_setup](families/anim_setup.md) |
+| `87` | `set_anim_spd_vxy` | 2 | [anim_setup](families/anim_setup.md) |
+| `88` | `set_anim_step` | 2 | [anim_setup](families/anim_setup.md) |
+| `89` | `set_anim_facing` | 60 | [anim_setup](families/anim_setup.md) |
+| `8A` | `set_anim_spd_facing` | 2 | [anim_setup](families/anim_setup.md) |
+| `8B` | `set_anim_sprmap` | 33 | [anim_setup](families/anim_setup.md) |
+| `8C` | `set_anim_accel` | 8 | [anim_setup](families/anim_setup.md) |
+| `8D` | `spawn_child_guarded` | 5 | [child_sprite](families/child_sprite.md) |
+| `8E` | `spawn_child_guarded_w` | 10 | [child_sprite](families/child_sprite.md) |
+| `8F` | `spawn_child` | 40 | [child_sprite](families/child_sprite.md) |
+| `90` | `spawn_child_w` | 5 | [child_sprite](families/child_sprite.md) |
+| `91` | `set_sprmap_render` | 55 | [render_config](families/render_config.md) |
+| `92` | `set_sprmap_render_spd` | 7 | [render_config](families/render_config.md) |
+| `93` | `spawn_render_actor` | 20 | [render_config](families/render_config.md) |
+| `94` | `spawn_render_actor_spd` | 12 | [render_config](families/render_config.md) |
+| `95` | `set_bitmap_overlay` | 5 | [render_config](families/render_config.md) |
+| `96` | `set_bitmap_overlay_spd` | 0 | [render_config](families/render_config.md) |
+| `97` | `wait_anim_done` | 2076 | [anim_wait](families/anim_wait.md) |
+| `98` | `wait_anim_frames` | 931 | [anim_wait](families/anim_wait.md) |
+| `99` | `wait_anim_clear_sprmap` | 33 | [anim_wait](families/anim_wait.md) |
+| `9A` | `anim_until_interact_destroy` | 46 | [anim_wait](families/anim_wait.md) |
+| `9B` | `anim_step_tick` | 2 | [anim_wait](families/anim_wait.md) |
+| `9C` | `child_wait` | 53 | [anim_wait](families/anim_wait.md) |
+| `9D` | `copy_oam_block` | 6 | [render_config](families/render_config.md) |
+| `9E` | `sprmap_render_wait` | 75 | [render_config](families/render_config.md) |
+| `9F` | `sprmap_render_wait_multi` | 19 | [render_config](families/render_config.md) |
+| `A0` | `bitmap_render_wait` | 5 | [render_config](families/render_config.md) |
+| `A1` | `bitmap_render_wait_multi` | 0 | [render_config](families/render_config.md) |
 
 ## Example sketches
 
@@ -478,8 +638,8 @@ hit:
 | Doc | Role |
 |-----|------|
 | [index.md](index.md) | This overview |
-| [families/](families/) | Per-family deep dives (`$00`–`$57`) |
-| [../cop_actor_analysis.md](../cop_actor_analysis.md) | Actor types, full roster, `$58+` opcode notes |
+| [families/](families/) | Per-family deep dives (`$00`–`$70`) |
+| [../cop_actor_analysis.md](../cop_actor_analysis.md) | Actor types, full roster, `$71+` opcode notes |
 | `us/copdef.json` | Operand layouts |
 | `extracted/system/chunk_008000.asm` | Handlers / jump table |
 | `scripts/split_cop_docs.py` | Historical splitter — **do not** rebuild family bodies from the monolith |
