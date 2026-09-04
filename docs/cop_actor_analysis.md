@@ -1,14 +1,14 @@
 # Robotrek COP Scripting & Actor Analysis
 
-_Working document for continued COP analysis. **COP `$00`–`$A1` deep audits** live in [`docs/cop/`](cop/index.md) (overview + 39 family pages). This file keeps actor/header stats, the full opcode roster, and **`$A2+` stubs** for opcodes not yet deep-audited._
+_Working document for continued COP analysis. **COP `$00`–`$CF` deep audits** live in [`docs/cop/`](cop/index.md) (overview + 50 family pages). This file keeps actor/header stats, the full opcode roster, and **`$D0+` stubs** for opcodes not yet deep-audited._
 
 ## Documentation layout
 
 | Doc | Role |
 |-----|------|
 | [`docs/cop/index.md`](cop/index.md) | System overview, memory map, dispatch, `$00`–`$7F` stats |
-| [`docs/cop/families/`](cop/families/) | Deep-audited opcode families (`$00`–`$A1`, 39 docs) |
-| **This file** | Actor types, full roster, `$A2+` workspace (stubs) |
+| [`docs/cop/families/`](cop/families/) | Deep-audited opcode families (`$00`–`$CF`, 50 docs) |
+| **This file** | Actor types, full roster, `$D0+` workspace (stubs) |
 
 ## Overview
 
@@ -17,14 +17,14 @@ Robotrek scene logic is driven by **actors**: small scripted objects with a 5-by
 - Actor definitions found: **866**
 - COP opcodes in copdef.json: **231**
 - Jump-table slots: **251**
-- Deep-audited range: **`$00`–`$A1`** → see [`docs/cop/`](cop/index.md) (39 family docs)
-- Pending deep audit: **`$A2+`** (stubs below; confidence medium/low until verified)
+- Deep-audited range: **`$00`–`$CF`** → see [`docs/cop/`](cop/index.md) (50 family docs)
+- Pending deep audit: **`$D0+`** (stubs below; confidence medium/low until verified)
 
 ## Memory map & dispatch
 
 The script/actor memory map, `$7F` offset frequency table, global WRAM notes, and COP dispatcher walkthrough are maintained in [`docs/cop/index.md`](cop/index.md#memory-map-script--actor-relevant) (Memory map + COP dispatch sections).
 
-When `$A2+` analysis discovers new addresses or corrects roles, update the index memory map (and the relevant family page if the address is shared with `$00`–`$A1`).
+When `$D0+` analysis discovers new addresses or corrects roles, update the index memory map (and the relevant family page if the address is shared with `$00`–`$CF`).
 
 ## Actor types
 
@@ -191,9 +191,9 @@ Examples:
 
 Related: `unk11` bundles spritemap (`part0`), sprite group bits (`part1`/`part2`), and collision/box (`part3`/`part4`).
 
-## COP `$00`–`$A1` (moved to family docs)
+## COP `$00`–`$CF` (moved to family docs)
 
-High-detail handler walkthroughs, call-site audits, encoding cheat sheets, and family notes for `$00`–`$A1` live in per-family documents. Start at the [COP overview](cop/index.md).
+High-detail handler walkthroughs, call-site audits, encoding cheat sheets, and family notes for `$00`–`$CF` live in per-family documents. Start at the [COP overview](cop/index.md).
 
 | Family | Ops | Doc |
 |--------|-----|-----|
@@ -237,12 +237,23 @@ High-detail handler walkthroughs, call-site audits, encoding cheat sheets, and f
 | **Child Sprite Spawn** | `8D`–`90` | [child_sprite.md](cop/families/child_sprite.md) |
 | **Render Configuration** | `91`–`96` `9D`–`A1` | [render_config.md](cop/families/render_config.md) |
 | **Animation Wait / Tick** | `97`–`9C` | [anim_wait.md](cop/families/anim_wait.md) |
+| **Actor Spawn (main chain)** | `A2`–`A8` | [actor_spawn.md](cop/families/actor_spawn.md) |
+| **Actor Spawn (render chain)** | `A9`–`B1` | [actor_spawn_render.md](cop/families/actor_spawn_render.md) |
+| **Actor Destroy** | `B2`–`B3` | [actor_destroy.md](cop/families/actor_destroy.md) |
+| **Velocity Set** | `B4`–`B6` | [velocity_set.md](cop/families/velocity_set.md) |
+| **Position Adjust** | `B7`–`B9` | [position_adjust.md](cop/families/position_adjust.md) |
+| **Tile Collision** | `BA`–`BD` | [tile_collision.md](cop/families/tile_collision.md) |
+| **Player Move Response** | `BE`–`C0` | [player_move_response.md](cop/families/player_move_response.md) |
+| **Screen Edge Branch** | `C1`–`C4` | [screen_edge_branch.md](cop/families/screen_edge_branch.md) |
+| **Sprite Attribute Set** | `C5`–`C7` | [sprite_attribs.md](cop/families/sprite_attribs.md) |
+| **Render Source Load** | `C8`–`CA` | [render_source_load.md](cop/families/render_source_load.md) |
+| **Script Yield / Resume** | `CB`–`CF` | [script_yield.md](cop/families/script_yield.md) |
 
-False neighbors and usage rankings: see [Instruction families](cop/index.md#instruction-families-00a1) in the overview.
+False neighbors and usage rankings: see [Instruction families](cop/index.md#instruction-families-00cf) in the overview.
 
 ## Script functions (COP opcodes)
 
-Quick roster of **all** COP slots. For `$00`–`$A1` deep semantics, use the [family docs](cop/families/) — this table is for lookup and for tracking `$A2+` confidence/usage.
+Quick roster of **all** COP slots. For `$00`–`$CF` deep semantics, use the [family docs](cop/families/) — this table is for lookup and for tracking `$D0+` confidence/usage.
 
 Operand legend: `u8`/`u16` immediate; `ptr16` bank-local; `ptr24` long; `code-list` pointer to address table.
 
@@ -412,52 +423,52 @@ Confidence: **high** = handler fully reasoned; **medium** = strong signals; **lo
 | `9F` | `sprmap_render_wait_multi` | high | (none) | `code_00C305` | 19 |
 | `A0` | `bitmap_render_wait` | high | (none) | `code_00C32A` | 5 |
 | `A1` | `bitmap_render_wait_multi` | high | (not in copdef) | `code_00C339` | 0 |
-| `A2` | `spawn_or_run_actor` | medium | ptr24 code, u16 | `code_00C34C` | 22 |
-| `A3` | `spawn_or_run_actor` | medium | ptr24 code | `code_00C396` | 2 |
-| `A4` | `no_operand` | low | (not in copdef) | `code_00C3BC` | 0 |
-| `A5` | `spawn_or_run_actor` | medium | ptr24 code, u16, u16 | `code_00C3EB` | 3 |
-| `A6` | `no_operand` | low | (not in copdef) | `code_00C436` | 0 |
-| `A7` | `no_operand` | low | (not in copdef) | `code_00C48A` | 0 |
-| `A8` | `no_operand` | low | (not in copdef) | `code_00C4C2` | 0 |
-| `A9` | `spawn_or_run_actor` | medium | ptr24 code, u16 | `code_00C503` | 14 |
-| `AA` | `spawn_child_actor` | high | ptr24 code | `code_00C54A` | 206 |
-| `AB` | `spawn_child_word` | medium | ptr24 code, u16 | `code_00C570` | 43 |
-| `AC` | `spawn_child_word2` | medium | ptr24 code, u16 | `code_00C59F` | 138 |
-| `AD` | `spawn_child_xy` | high | ptr24 code, u16, u16 | `code_00C5CE` | 247 |
-| `AE` | `spawn_child_xy_param` | medium | ptr24 code, u16, u16, u16 | `code_00C619` | 110 |
-| `AF` | `spawn_child_words` | medium | ptr24 code, u16, u16 | `code_00C66D` | 24 |
-| `B0` | `spawn_child_3words` | medium | ptr24 code, u16, u16, u16 | `code_00C6A5` | 4 |
-| `B1` | `spawn_child_3words_alt` | medium | ptr24 code, u16, u16, u16 | `code_00C6E6` | 33 |
-| `B2` | `update_sprite` | high | (none) | `code_00C73A` | 533 |
-| `B3` | `no_operand` | low | (none) | `code_00C744` | 6 |
-| `B4` | `byte_op` | low | u8 | `code_00C74E` | 10 |
-| `B5` | `no_operand` | low | (not in copdef) | `code_00C762` | 0 |
-| `B6` | `no_operand` | low | (not in copdef) | `code_00C776` | 0 |
-| `B7` | `word_op` | low | u16 | `code_00C798` | 24 |
-| `B8` | `word_op` | low | u16 | `code_00C7B3` | 27 |
-| `B9` | `cop_b9` | low | u16, u16 | `code_00C7C4` | 21 |
-| `BA` | `no_operand` | low | (none) | `code_00C7EA` | 2 |
-| `BB` | `no_operand` | low | (none) | `code_00C803` | 2 |
-| `BC` | `no_operand` | low | (none) | `code_00C81C` | 2 |
-| `BD` | `no_operand` | low | (none) | `code_00C835` | 4 |
-| `BE` | `cop_be` | low | u8, ptr16 code | `code_00C84E` | 2 |
-| `BF` | `cop_bf` | low | u8, ptr16 code | `code_00C8CD` | 2 |
-| `C0` | `byte_op` | low | u8 | `code_00C94C` | 1 |
-| `C1` | `cop_c1` | low | u8, ptr16 code | `code_00C9C1` | 3 |
-| `C2` | `cop_c2` | low | u8, ptr16 code | `code_00C9E2` | 3 |
-| `C3` | `cop_c3` | low | u8, ptr16 code | `code_00C9FB` | 3 |
-| `C4` | `cop_c4` | low | u8, ptr16 code | `code_00CA1C` | 3 |
-| `C5` | `byte_op` | low | u8 | `code_00CA39` | 54 |
-| `C6` | `byte_op` | low | u8 | `code_00CA52` | 33 |
-| `C7` | `byte_op` | low | u8 | `code_00CA6B` | 24 |
-| `C8` | `cop_c8` | low | ptr24 binary, u8 | `code_00CA84` | 73 |
-| `C9` | `cop_c9` | low | address24 | `code_00CABB` | 24 |
-| `CA` | `byte_op` | low | u8 | `code_00CADB` | 51 |
-| `CB` | `continue_next_tick` | high | (none) | `code_00CB38` | 744 |
-| `CC` | `yield_next_tick` | high | (none) | `code_00CB44` | 393 |
-| `CD` | `spawn_or_run_actor` | medium | ptr24 code, u16 | `code_00CB50` | 6 |
-| `CE` | `spawn_or_run_actor` | medium | ptr24 code | `code_00CB6D` | 7 |
-| `CF` | `goto_far` | high | ptr24 code | `code_00CB84` | 151 |
+| `A2` | `spawn_actor_head` | high | @Code, Word | `code_00C34C` | 22 |
+| `A3` | `spawn_actor_child` | high | @Code | `code_00C396` | 2 |
+| `A4` | `spawn_actor_child_flags` | high | @Code, Word (not in copdef) | `code_00C3BC` | 0 |
+| `A5` | `spawn_actor_child_offset` | high | @Code, Word, Word | `code_00C3EB` | 3 |
+| `A6` | `spawn_actor_child_offset_flags` | high | @Code, Word, Word, Word (not in copdef) | `code_00C436` | 0 |
+| `A7` | `spawn_actor_child_xy` | high | @Code, Word, Word (not in copdef) | `code_00C48A` | 0 |
+| `A8` | `spawn_actor_child_xy_flags` | high | @Code, Word, Word, Word (not in copdef) | `code_00C4C2` | 0 |
+| `A9` | `spawn_render_head` | high | @Code, Word | `code_00C503` | 14 |
+| `AA` | `spawn_render_child` | high | @Code | `code_00C54A` | 206 |
+| `AB` | `spawn_render_child_counter` | high | @Code, Word | `code_00C570` | 43 |
+| `AC` | `spawn_render_child_flags` | high | @Code, Word | `code_00C59F` | 138 |
+| `AD` | `spawn_render_child_offset` | high | @Code, Word, Word | `code_00C5CE` | 247 |
+| `AE` | `spawn_render_child_offset_flags` | high | @Code, Word, Word, Word | `code_00C619` | 110 |
+| `AF` | `spawn_render_child_xy` | high | @Code, Word, Word | `code_00C66D` | 24 |
+| `B0` | `spawn_render_child_xy_flags` | high | @Code, Word, Word, Word | `code_00C6A5` | 4 |
+| `B1` | `spawn_render_child_offset_counter` | high | @Code, Word, Word, Word | `code_00C6E6` | 33 |
+| `B2` | `destroy_self` | high | (none) | `code_00C73A` | 534 |
+| `B3` | `destroy_self_and_children` | high | (none) | `code_00C744` | 6 |
+| `B4` | `set_velocity_x` | high | Byte | `code_00C74E` | 10 |
+| `B5` | `set_velocity_y` | high | Byte (not in copdef) | `code_00C762` | 0 |
+| `B6` | `set_velocity_xy` | high | Byte, Byte (not in copdef) | `code_00C776` | 0 |
+| `B7` | `adjust_pos_x` | high | Word | `code_00C798` | 24 |
+| `B8` | `adjust_pos_y` | high | Word | `code_00C7B3` | 27 |
+| `B9` | `adjust_pos_xy` | high | Word, Word | `code_00C7C4` | 21 |
+| `BA` | `check_tile_right` | high | (none) | `code_00C7EA` | 2 |
+| `BB` | `check_tile_left` | high | (none) | `code_00C803` | 2 |
+| `BC` | `check_tile_up` | high | (none) | `code_00C81C` | 2 |
+| `BD` | `check_tile_down` | high | (none) | `code_00C835` | 4 |
+| `BE` | `move_response_horiz` | high | Byte, &Code | `code_00C84E` | 2 |
+| `BF` | `move_response_vert` | high | Byte, &Code | `code_00C8CD` | 2 |
+| `C0` | `move_response_idle` | high | Byte | `code_00C94C` | 1 |
+| `C1` | `branch_screen_top` | high | Byte, &Code | `code_00C9C1` | 3 |
+| `C2` | `branch_screen_bottom` | high | Byte, &Code | `code_00C9E2` | 3 |
+| `C3` | `branch_screen_left` | high | Byte, &Code | `code_00C9FB` | 3 |
+| `C4` | `branch_screen_right` | high | Byte, &Code | `code_00CA1C` | 3 |
+| `C5` | `set_sprite_priority` | high | Byte | `code_00CA39` | 54 |
+| `C6` | `set_sprite_palette` | high | Byte | `code_00CA52` | 33 |
+| `C7` | `set_sprite_nametable` | high | Byte | `code_00CA6B` | 24 |
+| `C8` | `load_spritemap` | high | @Binary, Byte | `code_00CA84` | 73 |
+| `C9` | `load_bitmap` | high | Address | `code_00CABB` | 24 |
+| `CA` | `load_portrait` | high | Byte | `code_00CADB` | 51 |
+| `CB` | `mark_resume` | high | (none) | `code_00CB38` | 744 |
+| `CC` | `yield` | high | (none) | `code_00CB44` | 393 |
+| `CD` | `yield_to_delay` | high | @Code, Word | `code_00CB50` | 6 |
+| `CE` | `yield_to` | high | @Code | `code_00CB6D` | 7 |
+| `CF` | `set_resume` | high | @Code | `code_00CB84` | 151 |
 | `D0` | `delay_frames` | high | u16 | `code_00CB9D` | 762 |
 | `D1` | `cop_d1` | low | u8, u8, u8 | `code_00CBB1` | 34 |
 | `D2` | `cop_d2` | low | u8, u8, u8, u8 | `code_00CBEC` | 12 |
@@ -502,815 +513,91 @@ Confidence: **high** = handler fully reasoned; **medium** = strong signals; **lo
 | `F9` | `cop_f9` | low | u16, u16 | `code_00DB22` | 8 |
 | `FA` | `byte_op` | low | u8 | `code_00DB86` | 25 |
 
-## Opcode reference (`$A2+`)
+## Opcode reference (`$D0+`)
 
-COP `$00`–`$A1` deep-audit write-ups live in the [family docs](cop/families/). See the roster table above for names and the family index for links. The sections below are **stubs for `$A2+`** awaiting deep analysis.
+COP `$00`–`$CF` deep-audit write-ups live in the [family docs](cop/families/). See the roster table above for names and the family index for links. The sections below are **stubs for `$D0+`** awaiting deep analysis.
 
-### COP [A2] — `spawn_or_run_actor`
-
-- **Confidence:** medium
-- **Handler:** `code_00C34C` @ chunk_008000.asm:9602-9639
-- **Parameters:** ptr24 code, u16
-- **Notes:** Far code pointer — typically actor spawn / subroutine install. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 22 times in extracted ASM
-- **WRAM touched:** `$0006`, `$0024`, `$0028`, `$002A`, `$01`, `$02`, `$03`, `$0EF4`, `$26`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E587`
-- **JSL:** `code_0481EE`
-- **Usage count:** 22
-- **Source examples:**
-  - `native_village/native_inn/actor_07BD34.asm:26` — `COP [A2] ( @code_04BB57, #$2800 )`
-  - `native_village/native_inn/actor_07BD34.asm:27` — `COP [A2] ( @code_07BD71, #$2800 )`
-  - `native_village/native_inn/actor_07BD34.asm:46` — `COP [A2] ( @code_07BDB4, #$2800 )`
-  - `native_village/native_inn/actor_07BD34.asm:47` — `COP [A2] ( @code_04BB57, #$2800 )`
-  - `prinkys_mansion/mansion_breaker_room/actor_06F004.asm:33` — `COP [A2] ( @code_06F4A1, #$0800 )`
-
-### COP [A3] — `spawn_or_run_actor`
-
-- **Confidence:** medium
-- **Handler:** `code_00C396` @ chunk_008000.asm:9641-9661
-- **Parameters:** ptr24 code
-- **Notes:** Far code pointer — typically actor spawn / subroutine install. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 2 times in extracted ASM
-- **WRAM touched:** `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E535`
-- **Usage count:** 2
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:30` — `COP [A3] ( @code_0BDCE0 )`
-  - `system/chunk_038000.asm:3789` — `COP [A3] ( @code_03BFCA )`
-
-### COP [A4] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C3BC` @ chunk_008000.asm:9663-9687
-- **Parameters:** _not listed in copdef.json_
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc
-- **WRAM touched:** `$0006`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E535`
-- **Usage count:** 0
-
-### COP [A5] — `spawn_or_run_actor`
-
-- **Confidence:** medium
-- **Handler:** `code_00C3EB` @ chunk_008000.asm:9689-9729
-- **Parameters:** ptr24 code, u16, u16
-- **Notes:** Far code pointer — typically actor spawn / subroutine install. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 3 times in extracted ASM
-- **WRAM touched:** `$0000`, `$0002`, `$000A`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E535`
-- **Usage count:** 3
-- **Source examples:**
-  - `system/chunk_038000.asm:13974` — `COP [A5] ( @code_03F049, #$0010, #$0000 )`
-  - `system/chunk_0B8000.asm:11525` — `COP [A5] ( @code_0BEA93, #$00A0, #$FF00 )`
-  - `system/chunk_0B8000.asm:11541` — `COP [A5] ( @code_0BEB64, #$0000, #$FF00 )`
-
-### COP [A6] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C436` @ chunk_008000.asm:9731-9775
-- **Parameters:** _not listed in copdef.json_
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc
-- **WRAM touched:** `$0000`, `$0002`, `$0006`, `$000A`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E535`
-- **Usage count:** 0
-
-### COP [A7] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C48A` @ chunk_008000.asm:9777-9805
-- **Parameters:** _not listed in copdef.json_
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc
-- **WRAM touched:** `$0000`, `$0002`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E535`
-- **Usage count:** 0
-
-### COP [A8] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C4C2` @ chunk_008000.asm:9807-9839
-- **Parameters:** _not listed in copdef.json_
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc
-- **WRAM touched:** `$0000`, `$0002`, `$0006`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E535`
-- **Usage count:** 0
-
-### COP [A9] — `spawn_or_run_actor`
-
-- **Confidence:** medium
-- **Handler:** `code_00C503` @ chunk_008000.asm:9841-9877
-- **Parameters:** ptr24 code, u16
-- **Notes:** Far code pointer — typically actor spawn / subroutine install. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 14 times in extracted ASM
-- **WRAM touched:** `$0006`, `$0026`, `$0028`, `$002A`, `$01`, `$02`, `$03`, `$0EF6`, `$24`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E587`
-- **JSL:** `code_0481EE`
-- **Usage count:** 14
-- **Source examples:**
-  - `hacker_fortress/tetron_room/actor_04DB88.asm:25` — `COP [A9] ( @code_04DBCC, #$2800 )`
-  - `system/actor_0BD8F4.asm:344` — `COP [A9] ( @code_0BDC80, #$2800 )`
-  - `system/actor_0BD8F4.asm:368` — `COP [A9] ( @code_0BDC6F, #$2000 )`
-  - `system/actor_0BD8F4.asm:395` — `COP [A9] ( @code_0BDC97, #$2800 )`
-  - `system/chunk_008000.asm:15944` — `COP [A9] ( @code_03BC0A, #$2001 )`
-
-### COP [AA] — `spawn_child_actor`
+### COP [A2]–[A5] — Actor Spawn (main chain)
 
 - **Confidence:** high
-- **Handler:** `code_00C54A` @ chunk_008000.asm:9879-9899
-- **Parameters:** ptr24 code
-- **Description:** Spawn child actor running `@Code`; link parent in `$7F0022`.
-- **Notes:** Named from handler reverse-engineering in chunk_008000.asm. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 206 times in extracted ASM
-- **WRAM touched:** `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 206
-- **Source examples:**
-  - `boot/boot_logo/actor_04B187.asm:21` — `COP [AA] ( @code_04B25F )`
-  - `boot/boot_logo/actor_04B187.asm:22` — `COP [AA] ( @code_04B280 )`
-  - `boot/prologue_androids/actor_04EA2D.asm:24` — `COP [AA] ( @code_0BDE9F )`
-  - `boot/prologue_hackers/actor_04E8B2.asm:12` — `COP [AA] ( @code_04E8EA )`
-  - `boot/prologue_hackers/actor_04E8B2.asm:13` — `COP [AA] ( @code_0BDE9F )`
+- **Deep audit:** see [actor_spawn.md](cop/families/actor_spawn.md)
+- **Family also covers:** `[A6]`–`[A8]` (unused variants)
 
-<details><summary>Handler excerpt</summary>
+Seven opcodes that allocate a new actor and link it into the main execution chain (`$0EF4`). `[A2]` inserts at the chain head; `[A3]`–`[A8]` use `code_00E535` to insert as a child of the caller. Combinatorial variants add facing-relative position offsets and/or flags words. Only `[A2]` (22), `[A3]` (2), and `[A5]` (3) are used in practice.
 
-```asm
-code_00C54A {
-    TYX 
-    PHX 
-    JSR $&code_00E55E
-    TYX 
-    LDA [$2C]
-    INC $2C
-    INC $2C
-    STA $0028, X
-    LDA [$2C]
-    INC $2C
-    AND #$00FF
-    STA $002A, X
-    LDA $01, S
-    STA $7F0022, X
-    TXY 
-    PLX 
-    LDA $2C
-    STA $02, S
-    RTI 
-}
-```
+### COP [A6]–[A8] — unused actor spawn variants
 
-</details>
+- **Deep audit:** see [actor_spawn.md](cop/families/actor_spawn.md)
 
-### COP [AB] — `spawn_child_word`
-
-- **Confidence:** medium
-- **Handler:** `code_00C570` @ chunk_008000.asm:9901-9925
-- **Parameters:** ptr24 code, u16
-- **Notes:** Named from handler patterns; verify edge cases. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 43 times in extracted ASM
-- **WRAM touched:** `$0022`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 43
-- **Source examples:**
-  - `system/chunk_02E9AA.asm:813` — `COP [AB] ( @code_02F1C1, #$0004 )`
-  - `system/chunk_02E9AA.asm:817` — `COP [AB] ( @code_02F1C1, #$0002 )`
-  - `system/chunk_02E9AA.asm:821` — `COP [AB] ( @code_02F1C1, #$0000 )`
-  - `system/chunk_02E9AA.asm:1538` — `COP [AB] ( @code_02F737, #$0000 )`
-  - `system/chunk_02E9AA.asm:1543` — `COP [AB] ( @code_02F737, #$0002 )`
-
-### COP [AC] — `spawn_child_word2`
-
-- **Confidence:** medium
-- **Handler:** `code_00C59F` @ chunk_008000.asm:9927-9951
-- **Parameters:** ptr24 code, u16
-- **Notes:** Named from handler patterns; verify edge cases. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 138 times in extracted ASM
-- **WRAM touched:** `$0006`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 138
-- **Source examples:**
-  - `boot/diary_menu/actor_04B29E.asm:36` — `COP [AC] ( @code_0B836B, #$A000 )`
-  - `boot/prologue_androids/actor_04EA2D.asm:22` — `COP [AC] ( @code_04EA7A, #$2800 )`
-  - `boot/prologue_androids/actor_04EA2D.asm:23` — `COP [AC] ( @code_04EA8A, #$2800 )`
-  - `credits/credits_inventors/actor_04D524.asm:11` — `COP [AC] ( @code_04D562, #$2800 )`
-  - `credits/credits_shaman/actor_04D308.asm:66` — `COP [AC] ( @code_04D39D, #$0800 )`
-
-### COP [AD] — `spawn_child_xy`
+### COP [A9]–[B1] — Actor Spawn (render chain)
 
 - **Confidence:** high
-- **Handler:** `code_00C5CE` @ chunk_008000.asm:9953-9993
-- **Parameters:** ptr24 code, u16, u16
-- **Description:** Spawn child at relative/absolute X/Y.
-- **Notes:** Named from handler reverse-engineering in chunk_008000.asm. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 247 times in extracted ASM
-- **WRAM touched:** `$0000`, `$0002`, `$000A`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 247
-- **Source examples:**
-  - `system/chunk_02E9AA.asm:343` — `COP [AD] ( @code_02ED4C, #$FFD0, #$0000 )`
-  - `system/chunk_02E9AA.asm:355` — `COP [AD] ( @code_02ED65, #$0030, #$0000 )`
-  - `system/chunk_02E9AA.asm:441` — `COP [AD] ( @code_02ED9B, #$0000, #$FFE0 )`
-  - `system/chunk_02E9AA.asm:442` — `COP [AD] ( @code_02ED9B, #$0000, #$0020 )`
-  - `system/chunk_02E9AA.asm:594` — `COP [AD] ( @code_02EF58, #$FFF8, #$0000 )`
+- **Deep audit:** see [actor_spawn_render.md](cop/families/actor_spawn_render.md)
 
-<details><summary>Handler excerpt</summary>
+Nine opcodes that allocate a new actor and link it into the render execution chain (`$0EF6`). `[A9]` inserts at the chain head; `[AA]`–`[B1]` use `code_00E55E` to insert as a child. Combinatorial variants add facing-relative/absolute position, flags (`$06`), and/or counter (`$22`). All 9 ops are used. `[AD]` (247) and `[AA]` (206) are the most-used spawn opcodes overall. Total: 819 call sites.
 
-```asm
-code_00C5CE {
-    TYX 
-    PHX 
-    JSR $&code_00E55E
-    TYX 
-    LDA [$2C]
-    INC $2C
-    INC $2C
-    STA $0028, X
-    LDA [$2C]
-    INC $2C
-    AND #$00FF
-    STA $002A, X
-    LDA $000A, X
-    ASL 
-    ASL 
-    LDA [$2C]
-    INC $2C
-    INC $2C
-    BCC loc_00C5F8
-    EOR #$FFFF
-    INC 
-
-  loc_00C5F8:
-  ; ...
-```
-
-</details>
-
-### COP [AE] — `spawn_child_xy_param`
-
-- **Confidence:** medium
-- **Handler:** `code_00C619` @ chunk_008000.asm:9995-10039
-- **Parameters:** ptr24 code, u16, u16, u16
-- **Notes:** Named from handler patterns; verify edge cases. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 110 times in extracted ASM
-- **WRAM touched:** `$0000`, `$0002`, `$0006`, `$000A`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 110
-- **Source examples:**
-  - `boot/diary_menu/actor_04B29E.asm:78` — `COP [AE] ( @code_04B3BD, #$0024, #$0066, #$8000 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:20` — `COP [AE] ( @code_04EF03, #$FFD0, #$FFE0, #$0800 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:21` — `COP [AE] ( @code_04EF2E, #$FFB0, #$0000, #$0800 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:22` — `COP [AE] ( @code_04EF2E, #$FFB0, #$0020, #$0800 )`
-  - `credits/credits_chickens/actor_04D745.asm:40` — `COP [AE] ( @code_04D80D, #$0010, #$0000, #$0800 )`
-
-### COP [AF] — `spawn_child_words`
-
-- **Confidence:** medium
-- **Handler:** `code_00C66D` @ chunk_008000.asm:10041-10069
-- **Parameters:** ptr24 code, u16, u16
-- **Notes:** Named from handler patterns; verify edge cases. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 24 times in extracted ASM
-- **WRAM touched:** `$0000`, `$0002`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 24
-- **Source examples:**
-  - `boot/prologue_inventor/actor_04EE8B.asm:23` — `COP [AF] ( @code_04F310, #$02B8, #$0130 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:24` — `COP [AF] ( @code_04F310, #$02C8, #$0130 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:25` — `COP [AF] ( @code_04F310, #$02D8, #$0130 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:26` — `COP [AF] ( @code_04F310, #$0218, #$01C0 )`
-  - `boot/prologue_inventor/actor_04EE8B.asm:27` — `COP [AF] ( @code_04F310, #$0228, #$01D0 )`
-
-### COP [B0] — `spawn_child_3words`
-
-- **Confidence:** medium
-- **Handler:** `code_00C6A5` @ chunk_008000.asm:10071-10103
-- **Parameters:** ptr24 code, u16, u16, u16
-- **Notes:** Named from handler patterns; verify edge cases. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 4 times in extracted ASM
-- **WRAM touched:** `$0000`, `$0002`, `$0006`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 4
-- **Source examples:**
-  - `prinkys_mansion/mansion_tower2_center/actor_06B52E.asm:31` — `COP [B0] ( @code_06B547, #$0188, #$0150, #$0800 )`
-  - `unorganized/map_1C0/actor_04EF36.asm:24` — `COP [B0] ( @code_04F34F, #$00A8, #$00B0, #$0800 )`
-  - `unorganized/map_1C0/actor_04EF36.asm:25` — `COP [B0] ( @code_04F381, #$00B8, #$00B0, #$0800 )`
-  - `unorganized/map_1C0/actor_04EF36.asm:26` — `COP [B0] ( @code_04F3B3, #$00C8, #$00B0, #$0800 )`
-
-### COP [B1] — `spawn_child_3words_alt`
-
-- **Confidence:** medium
-- **Handler:** `code_00C6E6` @ chunk_008000.asm:10105-10149
-- **Parameters:** ptr24 code, u16, u16, u16
-- **Notes:** Named from handler patterns; verify edge cases. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 33 times in extracted ASM
-- **WRAM touched:** `$0000`, `$0002`, `$000A`, `$0022`, `$0028`, `$002A`, `$01`, `$02`, `$2C`
-- **Actor RAM:** `$7F0022`
-- **JSR:** `code_00E55E`
-- **Usage count:** 33
-- **Source examples:**
-  - `system/chunk_02E9AA.asm:55` — `COP [B1] ( @code_02EAAB, #$0008, #$0000, #$0001 )`
-  - `system/chunk_02E9AA.asm:65` — `COP [B1] ( @code_02EAAB, #$0008, #$0000, #$0002 )`
-  - `system/chunk_02E9AA.asm:75` — `COP [B1] ( @code_02EAAB, #$0008, #$0000, #$0003 )`
-  - `system/chunk_02E9AA.asm:81` — `COP [B1] ( @code_02EB0A, #$0008, #$FFE0, #$0006 )`
-  - `system/chunk_02E9AA.asm:84` — `COP [B1] ( @code_02EB0A, #$0008, #$FFE0, #$0008 )`
-
-### COP [B2] — `update_sprite`
+### COP [B2]–[B3] — Actor Destroy
 
 - **Confidence:** high
-- **Handler:** `code_00C73A` @ chunk_008000.asm:10151-10157
-- **Parameters:** (none)
-- **Description:** Force sprite/OAM update (`code_04FD4E`).
-- **Notes:** Named from handler reverse-engineering in chunk_008000.asm. Behaviors: sets_return_pc. Seen 533 times in extracted ASM
-- **WRAM touched:** `$02`, `$2C`
-- **JSL:** `code_04FD4E`
-- **Usage count:** 533
-- **Source examples:**
-  - `boot/boot_logo/actor_04B187.asm:69` — `COP [B2]`
-  - `boot/boot_logo/actor_04B187.asm:83` — `COP [B2]`
-  - `boot/diary_menu/actor_04B29E.asm:44` — `COP [B2]`
-  - `boot/diary_menu/actor_04B29E.asm:127` — `COP [B2]`
-  - `boot/prologue_androids/actor_04EA2D.asm:66` — `COP [B2]`
+- **Deep audit:** see [actor_destroy.md](cop/families/actor_destroy.md)
 
-<details><summary>Handler excerpt</summary>
+`[B2]` (`destroy_self`, 534 sites) unlinks the calling actor from the execution chain and frees its slot via `code_04FD4E`. `[B3]` (`destroy_self_and_children`, 6 sites) first walks the `$26` chain freeing consecutive child actors (matching `$7F0022,X`), then unlinks and frees itself via `code_04FD85`. Total: 540 call sites.
 
-```asm
-code_00C73A {
-    TYX 
-    JSL $@code_04FD4E
-    LDA $2C
-    STA $02, S
-    RTI 
-}
-```
-
-</details>
-
-### COP [B3] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C744` @ chunk_008000.asm:10159-10165
-- **Parameters:** (none)
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: sets_return_pc. Seen 6 times in extracted ASM
-- **WRAM touched:** `$02`, `$2C`
-- **JSL:** `code_04FD85`
-- **Usage count:** 6
-- **Source examples:**
-  - `system/chunk_02E9AA.asm:137` — `COP [B3]`
-  - `system/chunk_02E9AA.asm:1193` — `COP [B3]`
-  - `system/chunk_02E9AA.asm:1204` — `COP [B3]`
-  - `system/chunk_038000.asm:6299` — `COP [B3]`
-  - `system/chunk_038000.asm:12768` — `COP [B3]`
-
-### COP [B4] — `byte_op`
-
-- **Confidence:** low
-- **Handler:** `code_00C74E` @ chunk_008000.asm:10167-10179
-- **Parameters:** u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 10 times in extracted ASM
-- **WRAM touched:** `$02`, `$1C`, `$2C`
-- **Usage count:** 10
-- **Source examples:**
-  - `system/actor_04BA77.asm:31` — `COP [B4] ( #00 )`
-  - `system/actor_04BA77.asm:35` — `COP [B4] ( #15 )`
-  - `system/actor_04BA77.asm:40` — `COP [B4] ( #00 )`
-  - `system/actor_04BA77.asm:44` — `COP [B4] ( #16 )`
-  - `system/chunk_038000.asm:5146` — `COP [B4] ( #02 )`
-
-### COP [B5] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C762` @ chunk_008000.asm:10181-10193
-- **Parameters:** _not listed in copdef.json_
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc
-- **WRAM touched:** `$02`, `$1E`, `$2C`
-- **Usage count:** 0
-
-### COP [B6] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C776` @ chunk_008000.asm:10195-10214
-- **Parameters:** _not listed in copdef.json_
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc
-- **WRAM touched:** `$02`, `$1C`, `$1E`, `$2C`
-- **Usage count:** 0
-
-### COP [B7] — `word_op`
-
-- **Confidence:** low
-- **Handler:** `code_00C798` @ chunk_008000.asm:10216-10235
-- **Parameters:** u16
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 24 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$0A`, `$2C`
-- **Usage count:** 24
-- **Source examples:**
-  - `boot/boot_logo/actor_04B187.asm:14` — `COP [B7] ( #$FFF8 )`
-  - `boot/title_screen/actor_04E651.asm:41` — `COP [B7] ( #$FFE0 )`
-  - `credits/credits_heroes/actor_04CEAC.asm:10` — `COP [B7] ( #$FF60 )`
-  - `credits/credits_heroes/actor_04CEE3.asm:8` — `COP [B7] ( #$0008 )`
-  - `credits/credits_heroes/actor_04CEE3.asm:12` — `COP [B7] ( #$00A0 )`
-
-### COP [B8] — `word_op`
-
-- **Confidence:** low
-- **Handler:** `code_00C7B3` @ chunk_008000.asm:10237-10248
-- **Parameters:** u16
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 27 times in extracted ASM
-- **WRAM touched:** `$02`, `$2C`
-- **Usage count:** 27
-- **Source examples:**
-  - `boot/prologue_androids/actor_04ED40.asm:8` — `COP [B8] ( #$FFF8 )`
-  - `boot/title_screen/actor_04E537.asm:10` — `COP [B8] ( #$FFF8 )`
-  - `hacker_fortress/tetron_room/actor_04DB88.asm:12` — `COP [B8] ( #$0008 )`
-  - `seaside_cave/cave_headquarters/actor_06A2A4.asm:18` — `COP [B8] ( #$0006 )`
-  - `system/actor_07BDBC.asm:10` — `COP [B8] ( #$FFF8 )`
-
-### COP [B9] — `cop_b9`
-
-- **Confidence:** low
-- **Handler:** `code_00C7C4` @ chunk_008000.asm:10250-10275
-- **Parameters:** u16, u16
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 21 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$0A`, `$2C`
-- **Usage count:** 21
-- **Source examples:**
-  - `boot/prologue_hackers/actor_04EC3F.asm:11` — `COP [B9] ( #$FFE8, #$0004 )`
-  - `boot/prologue_hackers/actor_04EC5E.asm:11` — `COP [B9] ( #$FFE8, #$0004 )`
-  - `boot/prologue_hackers/actor_04EC9B.asm:8` — `COP [B9] ( #$FFE8, #$0004 )`
-  - `boot/prologue_hackers/actor_04ECC8.asm:11` — `COP [B9] ( #$0008, #$0004 )`
-  - `boot/prologue_hackers/actor_04ECF9.asm:9` — `COP [B9] ( #$0008, #$0004 )`
-
-### COP [BA] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C7EA` @ chunk_008000.asm:10277-10291
-- **Parameters:** (none)
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: sets_return_pc. Seen 2 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$2C`, `$34`, `$36`
-- **JSR:** `code_00DF84`
-- **Usage count:** 2
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:143` — `COP [BA]`
-  - `unorganized/actor_09D35D.asm:32` — `COP [BA]`
-
-### COP [BB] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C803` @ chunk_008000.asm:10293-10307
-- **Parameters:** (none)
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: sets_return_pc. Seen 2 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$2C`, `$34`, `$36`
-- **JSR:** `code_00E045`
-- **Usage count:** 2
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:206` — `COP [BB]`
-  - `unorganized/actor_09D35D.asm:19` — `COP [BB]`
-
-### COP [BC] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C81C` @ chunk_008000.asm:10309-10323
-- **Parameters:** (none)
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: sets_return_pc. Seen 2 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$2C`, `$34`, `$36`
-- **JSR:** `code_00DDF4`
-- **Usage count:** 2
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:252` — `COP [BC]`
-  - `unorganized/actor_09D35D.asm:50` — `COP [BC]`
-
-### COP [BD] — `no_operand`
-
-- **Confidence:** low
-- **Handler:** `code_00C835` @ chunk_008000.asm:10325-10339
-- **Parameters:** (none)
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: sets_return_pc. Seen 4 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$2C`, `$34`, `$36`
-- **JSR:** `code_00DEB5`
-- **Usage count:** 4
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:296` — `COP [BD]`
-  - `unorganized/actor_08A981.asm:44` — `COP [BD]`
-  - `unorganized/actor_09D35D.asm:63` — `COP [BD]`
-  - `unorganized/map_F2/actor_089DFB.asm:32` — `COP [BD]`
-
-### COP [BE] — `cop_be`
-
-- **Confidence:** low
-- **Handler:** `code_00C84E` @ chunk_008000.asm:10341-10403
-- **Parameters:** u8, ptr16 code
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 2 times in extracted ASM
-- **WRAM touched:** `$0004`, `$02`, `$0560`, `$09F8`, `$09FC`, `$09FE`, `$0A00`, `$0BAE`, `$12`, `$1C`, `$1E`, `$2C`, `$30`
-- **Actor RAM:** `$7F000C`, `$7F101A`
-- **JSR:** `code_00E3BA`, `code_00E4E1`
-- **Usage count:** 2
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:144` — `COP [BE] ( #FF, &code_0BD937 )`
-  - `system/actor_0BD8F4.asm:207` — `COP [BE] ( #FF, &code_0BD937 )`
-
-### COP [BF] — `cop_bf`
-
-- **Confidence:** low
-- **Handler:** `code_00C8CD` @ chunk_008000.asm:10405-10467
-- **Parameters:** u8, ptr16 code
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 2 times in extracted ASM
-- **WRAM touched:** `$0004`, `$02`, `$0560`, `$09F8`, `$09FA`, `$09FE`, `$0A00`, `$0BAE`, `$12`, `$1C`, `$1E`, `$2C`, `$30`
-- **Actor RAM:** `$7F000C`, `$7F101A`
-- **JSR:** `code_00E3BA`, `code_00E4E1`
-- **Usage count:** 2
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:253` — `COP [BF] ( #FF, &code_0BD937 )`
-  - `system/actor_0BD8F4.asm:297` — `COP [BF] ( #FF, &code_0BD937 )`
-
-### COP [C0] — `byte_op`
-
-- **Confidence:** low
-- **Handler:** `code_00C94C` @ chunk_008000.asm:10469-10527
-- **Parameters:** u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 1 times in extracted ASM
-- **WRAM touched:** `$02`, `$04`, `$09F8`, `$09FA`, `$09FC`, `$09FE`, `$0A00`, `$0A10`, `$0BAE`, `$12`, `$1C`, `$1E`, `$2C`, `$30`
-- **Actor RAM:** `$7F000C`, `$7F101A`
-- **JSR:** `code_00E420`
-- **Usage count:** 1
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:55` — `COP [C0] ( #FF )`
-
-### COP [C1] — `cop_c1`
-
-- **Confidence:** low
-- **Handler:** `code_00C9C1` @ chunk_008000.asm:10529-10549
-- **Parameters:** u8, ptr16 code
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc, skip_word_continue. Seen 3 times in extracted ASM
-- **WRAM touched:** `$02`, `$0862`, `$2C`
-- **Usage count:** 3
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:859` — `COP [C1] ( #20, &code_0BDF7F )`
-  - `system/actor_0BD8F4.asm:988` — `COP [C1] ( #10, &code_0BE0B9 )`
-  - `system/actor_0BD8F4.asm:1083` — `COP [C1] ( #10, &code_0BE17E )`
-
-### COP [C2] — `cop_c2`
-
-- **Confidence:** low
-- **Handler:** `code_00C9E2` @ chunk_008000.asm:10551-10567
-- **Parameters:** u8, ptr16 code
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc, skip_word_continue. Seen 3 times in extracted ASM
-- **WRAM touched:** `$02`, `$0866`, `$2C`
-- **Usage count:** 3
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:850` — `COP [C2] ( #00, &code_0BDF7F )`
-  - `system/actor_0BD8F4.asm:979` — `COP [C2] ( #10, &code_0BE0B9 )`
-  - `system/actor_0BD8F4.asm:1074` — `COP [C2] ( #00, &code_0BE17E )`
-
-### COP [C3] — `cop_c3`
-
-- **Confidence:** low
-- **Handler:** `code_00C9FB` @ chunk_008000.asm:10569-10589
-- **Parameters:** u8, ptr16 code
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc, skip_word_continue. Seen 3 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$0860`, `$2C`
-- **Usage count:** 3
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:868` — `COP [C3] ( #00, &code_0BDF7F )`
-  - `system/actor_0BD8F4.asm:997` — `COP [C3] ( #10, &code_0BE0B9 )`
-  - `system/actor_0BD8F4.asm:1092` — `COP [C3] ( #00, &code_0BE17E )`
-
-### COP [C4] — `cop_c4`
-
-- **Confidence:** low
-- **Handler:** `code_00CA1C` @ chunk_008000.asm:10591-10609
-- **Parameters:** u8, ptr16 code
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc, skip_word_continue. Seen 3 times in extracted ASM
-- **WRAM touched:** `$00`, `$02`, `$0864`, `$2C`
-- **Usage count:** 3
-- **Source examples:**
-  - `system/actor_0BD8F4.asm:877` — `COP [C4] ( #00, &code_0BDF7F )`
-  - `system/actor_0BD8F4.asm:1006` — `COP [C4] ( #10, &code_0BE0B9 )`
-  - `system/actor_0BD8F4.asm:1101` — `COP [C4] ( #00, &code_0BE17E )`
-
-### COP [C5] — `byte_op`
-
-- **Confidence:** low
-- **Handler:** `code_00CA39` @ chunk_008000.asm:10611-10626
-- **Parameters:** u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 54 times in extracted ASM
-- **WRAM touched:** `$01`, `$02`, `$0A`, `$2C`
-- **Usage count:** 54
-- **Source examples:**
-  - `credits/actor_04DAC5.asm:8` — `COP [C5] ( #30 )`
-  - `credits/credits_cyberspace/actor_04D721.asm:8` — `COP [C5] ( #30 )`
-  - `credits/credits_shaman/actor_04D308.asm:87` — `COP [C5] ( #30 )`
-  - `prinkys_mansion/actor_06F702.asm:8` — `COP [C5] ( #30 )`
-  - `prinkys_mansion/mansion_breezeway/actor_06F782.asm:8` — `COP [C5] ( #30 )`
-
-### COP [C6] — `byte_op`
-
-- **Confidence:** low
-- **Handler:** `code_00CA52` @ chunk_008000.asm:10628-10643
-- **Parameters:** u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 33 times in extracted ASM
-- **WRAM touched:** `$01`, `$02`, `$0A`, `$2C`
-- **Usage count:** 33
-- **Source examples:**
-  - `boot/diary_menu/actor_04B29E.asm:120` — `COP [C6] ( #0E )`
-  - `boot/prologue_inventor/actor_04ED79.asm:35` — `COP [C6] ( #0E )`
-  - `boot/title_screen/actor_04E537.asm:12` — `COP [C6] ( #00 )`
-  - `native_village/native_inn/actor_07BAB4.asm:39` — `COP [C6] ( #08 )`
-  - `native_village/native_village/actor_07B409.asm:40` — `COP [C6] ( #08 )`
-
-### COP [C7] — `byte_op`
-
-- **Confidence:** low
-- **Handler:** `code_00CA6B` @ chunk_008000.asm:10645-10660
-- **Parameters:** u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 24 times in extracted ASM
-- **WRAM touched:** `$01`, `$02`, `$0A`, `$2C`
-- **Usage count:** 24
-- **Source examples:**
-  - `boot/title_screen/actor_04E60C.asm:28` — `COP [C7] ( #00 )`
-  - `credits/credits_chickens/actor_04D745.asm:113` — `COP [C7] ( #01 )`
-  - `system/chunk_038000.asm:7242` — `COP [C7] ( #01 )`
-  - `system/chunk_038000.asm:11686` — `COP [C7] ( #00 )`
-  - `system/chunk_0B8000.asm:7150` — `COP [C7] ( #00 )`
-
-### COP [C8] — `cop_c8`
-
-- **Confidence:** low
-- **Handler:** `code_00CA84` @ chunk_008000.asm:10662-10687
-- **Parameters:** ptr24 binary, u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 73 times in extracted ASM
-- **WRAM touched:** `$02`, `$2C`
-- **Actor RAM:** `$7F0000`, `$7F0002`, `$7F000C`
-- **JSL:** `code_04FC71`, `code_04FCE6`
-- **Usage count:** 73
-- **Source examples:**
-  - `boot/diary_menu/actor_04B29E.asm:118` — `COP [C8] ( @spritemap_0E8000, #00 )`
-  - `boot/title_screen/actor_04E5C1.asm:9` — `COP [C8] ( @spritemap_0F8000, #00 )`
-  - `boot/title_screen/actor_04E60C.asm:27` — `COP [C8] ( @spritemap_128000, #00 )`
-  - `credits/credits_chickens/actor_04D745.asm:108` — `COP [C8] ( @spritemap_12C000, #01 )`
-  - `credits/credits_heroes/actor_04CEE3.asm:9` — `COP [C8] ( @spritemap_0F8000, #00 )`
-
-### COP [C9] — `cop_c9`
-
-- **Confidence:** low
-- **Handler:** `code_00CABB` @ chunk_008000.asm:10689-10704
-- **Parameters:** address24
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, reads_operands, sets_return_pc. Seen 24 times in extracted ASM
-- **WRAM touched:** `$02`, `$08`, `$2C`
-- **Actor RAM:** `$7F002E`, `$7F0030`
-- **Usage count:** 24
-- **Source examples:**
-  - `boot/diary_menu/actor_04B29E.asm:119` — `COP [C9] ( $7FD000 )`
-  - `boot/prologue_inventor/actor_04ED79.asm:10` — `COP [C9] ( $7FD000 )`
-  - `boot/title_screen/actor_04E537.asm:11` — `COP [C9] ( $7FD000 )`
-  - `credits/credits_fortress/actor_04DA33.asm:8` — `COP [C9] ( $7FD000 )`
-  - `credits/credits_heroes/actor_04CEAC.asm:8` — `COP [C9] ( $7FD000 )`
-
-### COP [CA] — `byte_op`
-
-- **Confidence:** low
-- **Handler:** `code_00CADB` @ chunk_008000.asm:10706-10757
-- **Parameters:** u8
-- **Notes:** Heuristic from operand layout + handler memory touches; verify before renaming. Behaviors: advances_script_ptr, may_halt_rtl, reads_operands, sets_script_pc_$28. Seen 51 times in extracted ASM
-- **WRAM touched:** `$0526`, `$0527`, `$06`, `$09BE`, `$28`, `$2C`
-- **Actor RAM:** `$7F002E`, `$7F0030`
-- **JSL:** `code_08E62D`
-- **Usage count:** 51
-- **Source examples:**
-  - `system/chunk_02E9AA.asm:451` — `COP [CA] ( #0B )`
-  - `system/chunk_02E9AA.asm:460` — `COP [CA] ( #03 )`
-  - `system/chunk_02E9AA.asm:971` — `COP [CA] ( #0C )`
-  - `system/chunk_02E9AA.asm:1201` — `COP [CA] ( #06 )`
-  - `system/chunk_02E9AA.asm:1689` — `COP [CA] ( #06 )`
-
-### COP [CB] — `continue_next_tick`
+### COP [B4]–[B6] — Velocity Set
 
 - **Confidence:** high
-- **Handler:** `code_00CB38` @ chunk_008000.asm:10759-10767
-- **Parameters:** (none)
-- **Description:** Checkpoint: keep PC, continue next interpreter entry (no RTL).
-- **Notes:** Named from handler reverse-engineering in chunk_008000.asm. Behaviors: sets_return_pc, sets_script_pc_$28. Seen 744 times in extracted ASM
-- **WRAM touched:** `$02`, `$28`, `$2A`, `$2C`, `$2E`
-- **Usage count:** 744
-- **Source examples:**
-  - `boot/actor_04E6E9.asm:12` — `COP [CB]`
-  - `boot/boot_logo/actor_04B187.asm:23` — `COP [CB]`
-  - `boot/boot_logo/actor_04B187.asm:34` — `COP [CB]`
-  - `boot/boot_logo/actor_04B187.asm:51` — `COP [CB]`
-  - `boot/diary_menu/actor_04B29E.asm:113` — `COP [CB]`
+- **Deep audit:** see [velocity_set.md](cop/families/velocity_set.md)
 
-<details><summary>Handler excerpt</summary>
+Three opcodes that set actor velocity (`$1C` / `$1E`) via lookup in `unk29_list_01C3B9`. `[B4]` (10 sites) sets X velocity; `[B5]` and `[B6]` (both 0 sites, not in copdef) set Y velocity and both axes respectively. Same table as [Animation Setup](cop/families/anim_setup.md) but sets velocity independently without resetting animation. Total: 10 call sites.
 
-```asm
-code_00CB38 {
-    TYX 
-    LDA $2E
-    STA $2A
-    LDA $2C
-    STA $28
-    STA $02, S
-    RTI 
-}
-```
-
-</details>
-
-### COP [CC] — `yield_next_tick`
+### COP [B7]–[B9] — Position Adjust
 
 - **Confidence:** high
-- **Handler:** `code_00CB44` @ chunk_008000.asm:10769-10778
-- **Parameters:** (none)
-- **Description:** Yield to next frame (PLA/PLA/RTL) keeping resume PC.
-- **Notes:** Named from handler reverse-engineering in chunk_008000.asm. Behaviors: may_halt_rtl, sets_script_pc_$28. Seen 393 times in extracted ASM
-- **WRAM touched:** `$28`, `$2A`, `$2C`, `$2E`
-- **Usage count:** 393
-- **Source examples:**
-  - `boot/title_screen/actor_04E49A.asm:44` — `COP [CC]`
-  - `boot/title_screen/actor_04E60C.asm:23` — `COP [CC]`
-  - `credits/credits_ghosts/actor_04D12C.asm:12` — `COP [CC]`
-  - `credits/credits_ghosts/actor_04D14A.asm:12` — `COP [CC]`
-  - `credits/credits_ghosts/actor_04D16C.asm:12` — `COP [CC]`
+- **Deep audit:** see [position_adjust.md](cop/families/position_adjust.md)
 
-<details><summary>Handler excerpt</summary>
+Three opcodes that adjust the actor's world position (`$00`/`$02`) by a signed offset. `[B7]` (24 sites) adjusts X with facing-relative negation; `[B8]` (27 sites) adjusts Y directly; `[B9]` (21 sites) adjusts both. The facing-relative X mechanism (`LDA $0A; ASL; ASL` → carry → negate) is identical to the spawn offset ops (`[A5]`/`[AD]`). Total: 72 call sites.
 
-```asm
-code_00CB44 {
-    TYX 
-    LDA $2E
-    STA $2A
-    LDA $2C
-    STA $28
-    PLA 
-    PLA 
-    RTL 
-}
-```
-
-</details>
-
-### COP [CD] — `spawn_or_run_actor`
-
-- **Confidence:** medium
-- **Handler:** `code_00CB50` @ chunk_008000.asm:10780-10797
-- **Parameters:** ptr24 code, u16
-- **Notes:** Far code pointer — typically actor spawn / subroutine install. Behaviors: advances_script_ptr, may_halt_rtl, reads_operands, sets_script_pc_$28. Seen 6 times in extracted ASM
-- **WRAM touched:** `$0E`, `$28`, `$2A`, `$2C`
-- **Usage count:** 6
-- **Source examples:**
-  - `boot/prologue_inventor/actor_04EB34.asm:38` — `COP [CD] ( @code_04EB65, #$0002 )`
-  - `boot/prologue_inventor/actor_04EB34.asm:59` — `COP [CD] ( @code_04EB92, #$0002 )`
-  - `hacker_fortress/tetron_room/actor_04DB88.asm:89` — `COP [CD] ( @code_04DC05, #$0020 )`
-  - `system/actor_04B881.asm:103` — `COP [CD] ( @code_04B92C, #$0005 )`
-  - `system/actor_04BA77.asm:47` — `COP [CD] ( @code_04BA9F, #$0004 )`
-
-### COP [CE] — `spawn_or_run_actor`
-
-- **Confidence:** medium
-- **Handler:** `code_00CB6D` @ chunk_008000.asm:10799-10813
-- **Parameters:** ptr24 code
-- **Notes:** Far code pointer — typically actor spawn / subroutine install. Behaviors: advances_script_ptr, may_halt_rtl, reads_operands, sets_script_pc_$28. Seen 7 times in extracted ASM
-- **WRAM touched:** `$28`, `$2A`, `$2C`
-- **Usage count:** 7
-- **Source examples:**
-  - `seaside_cave/cave_entrance/actor_06861D.asm:41` — `COP [CE] ( @code_068628 )`
-  - `system/chunk_048000.asm:6015` — `COP [CE] ( @code_04BC56 )`
-  - `system/chunk_0B8000.asm:28` — `COP [CE] ( @code_0B8391 )`
-  - `system/chunk_0B8000.asm:202` — `COP [CE] ( @code_0B84A1 )`
-  - `unorganized/map_14E/actor_09D95A.asm:31` — `COP [CE] ( @code_09D974 )`
-
-### COP [CF] — `goto_far`
+### COP [BA]–[BD] — Tile Collision Check
 
 - **Confidence:** high
-- **Handler:** `code_00CB84` @ chunk_008000.asm:10815-10829
-- **Parameters:** ptr24 code
-- **Description:** Goto far `@Code` (sets `$28/$2A`).
-- **Notes:** Named from handler reverse-engineering in chunk_008000.asm. Behaviors: advances_script_ptr, reads_operands, sets_return_pc, sets_script_pc_$28. Seen 151 times in extracted ASM
-- **WRAM touched:** `$02`, `$28`, `$2A`, `$2C`
-- **Usage count:** 151
-- **Source examples:**
-  - `fathers_house/actor_07A684.asm:72` — `COP [CF] ( @code_07A6B8 )`
-  - `fathers_house/chicken_farm/actor_07A575.asm:54` — `COP [CF] ( @code_07A598 )`
-  - `fathers_house/chicken_farm/actor_07A575.asm:61` — `COP [CF] ( @code_07A598 )`
-  - `fathers_house/farmers_house/actor_07A382.asm:54` — `COP [CF] ( @code_07A38D )`
-  - `fathers_house/fathers_house/actor_078ACB.asm:77` — `COP [CF] ( @code_078AED )`
+- **Deep audit:** see [tile_collision.md](cop/families/tile_collision.md)
 
-<details><summary>Handler excerpt</summary>
+Four directional tile collision checks. Each computes a probe point (`$34 = $00 − 8`, `$36 = $02 − 16`), looks up the tile attribute in `$7FA000`, and returns the tile type in `$30` (0 = passable, `#$0F` = solid, other values = special tiles like doors/stairs). `[BA]` checks right (`code_00DF84`, 2 sites), `[BB]` checks left (`code_00E045`, 2 sites), `[BC]` checks up (`code_00DDF4`, 2 sites), `[BD]` checks down (`code_00DEB5`, 4 sites). Multi-tile actors scan across their bounding box. Primary consumers: player host and NPC patrol actors. Total: 10 call sites.
 
-```asm
-code_00CB84 {
-    TYX 
-    LDA [$2C]
-    INC $2C
-    INC $2C
-    STA $28
-    LDA [$2C]
-    INC $2C
-    AND #$00FF
-    STA $2A
-    STZ $0E
-    LDA $2C
-    STA $02, S
-    RTI 
-}
-```
+### COP [BE]–[C0] — Player Move Response
 
-</details>
+- **Confidence:** high
+- **Deep audit:** see [player_move_response.md](cop/families/player_move_response.md)
+
+Three player-host-exclusive opcodes for collision response after `[BA]`–`[BD]` tile checks. `[BE]` (`move_response_horiz`, 2 sites) handles horizontal (right/left): if `$30 == #$0F` → branch to fallback; otherwise sets walking animation, direction state (`code_00E4E1`), and cross-axis velocity (`code_00E3BA` → `$1E`); special tile `#$02` (stairs) applies diagonal velocity overrides from `$09F8`–`$0A00`. `[BF]` (`move_response_vert`, 2 sites) identical but for vertical — velocity → `$1C`. `[C0]` (`move_response_idle`, 1 site) sets idle animation via `code_00E420`, clears both velocities. Total: 5 call sites.
+
+### COP [C1]–[C4] — Screen Edge Branch
+
+- **Confidence:** high
+- **Deep audit:** see [screen_edge_branch.md](cop/families/screen_edge_branch.md)
+
+Four directional screen boundary checks. Each reads a margin byte, computes actor position ± margin ± probe offset, and compares to the screen edge (`$0860`=left, `$0862`=top, `$0864`=right, `$0866`=bottom). If near the edge, branches to &Code (map transition handler); otherwise skips via `code_009F00`. `[C1]` = top (3 sites), `[C2]` = bottom (3), `[C3]` = left (3), `[C4]` = right (3). Player-host exclusive. The player host has three movement mode blocks each using all four in the same direction order. Total: 12 call sites.
+
+### COP [C5]–[C7] — Sprite Attribute Set
+
+- **Confidence:** high
+- **Deep audit:** see [sprite_attribs.md](cop/families/sprite_attribs.md)
+
+Three opcodes that write SNES OAM sprite attribute fields into `$0A` (high byte maps to `vhoopppc`). Each clears a bit-field via AND mask, then OR's in the byte operand (XBA'd to align). `[C5]` (`set_sprite_priority`, 54 sites) writes bits 12–13 (priority 0–3; `#$30` = priority 3 dominates at 49 uses). `[C6]` (`set_sprite_palette`, 33 sites) writes bits 9–11 (palette 0–7; used for palette swaps and color cycling). `[C7]` (`set_sprite_nametable`, 24 sites) writes bit 8 (tile page 0/1; overwhelmingly `#$00` to reset). Operands are pre-positioned in OAM bit layout. Total: 111 call sites.
+
+### COP [C8]–[CA] — Render Source Load
+
+- **Confidence:** high
+- **Deep audit:** see [render_source_load.md](cop/families/render_source_load.md)
+
+Three opcodes that load graphics source data pointers. `[C8]` (`load_spritemap`, 73 sites) loads a 24-bit spritemap table pointer into `$7F0000,X`/`$7F0002,X` with optional animation reset via `code_04FC71`/`code_04FCE6`; 67 uses pass `#00` (pointer only), 6 pass `#01` (reset to frame 0). `[C9]` (`load_bitmap`, 24 sites) loads a 24-bit bitmap pointer into `$7F002E,X`/`$7F0030,X` and sets `$08 |= #$8000` (bitmap mode); 23/24 calls use `$7FD000` (WRAM buffer). `[CA]` (`load_portrait`, 51 sites) computes a bitmap pointer from a 1-based portrait ID into `rawbitmap_158000` (2048 bytes per portrait), DMAs palette from `palettes_026BE8` (32 bytes per portrait) to `$7E:38E0`, caches the ID in `$09BE`, and yields via RTL. Total: 148 call sites.
+
+### COP [CB]–[CF] — Script Yield / Resume
+
+- **Confidence:** high
+- **Deep audit:** see [script_yield.md](cop/families/script_yield.md)
+
+Five opcodes that control actor script scheduling by saving resume points (`$28`/`$2A`) and optionally yielding via RTL. `[CB]` (`mark_resume`, 744 sites) saves the current PC as resume point and continues — the most common, used in render/animation loops. `[CC]` (`yield`, 393 sites) saves the current PC and yields — the primary "wait one tick" instruction, often paired with `COP [D0]` for delays. `[CD]` (`yield_to_delay`, 6 sites) sets an explicit @Code resume + Word delay, then yields. `[CE]` (`yield_to`, 7 sites) sets @Code resume and yields immediately — used for phase transitions in the player host. `[CF]` (`set_resume`, 151 sites) sets @Code as resume point but continues executing — the "set loop top" pattern, typically followed by one-shot work then RTL. Closely related to `[D0]` (`delay_frames`) which is the "current PC + delay + yield" combination. Total: 1301 call sites.
 
 ### COP [D0] — `delay_frames`
 
