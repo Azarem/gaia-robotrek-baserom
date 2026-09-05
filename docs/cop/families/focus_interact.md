@@ -35,7 +35,7 @@ Unlike the [tracked_ids](tracked_ids.md) family which manages the global id tabl
 ## Family notes
 
 - `[59]` is always unconditional — no branches, no JSL. Pure data-binding.
-- The copdef condition (`offset 3 & 0x80`) distinguishes `Word, Word` (numeric) from `Word, &Code` (script pointer) at disassembly time, but the handler reads both as plain words.
+- The condition (`offset 3 & 0x80`) distinguishes `Word, Word` (numeric) from `Word, &Code` (script pointer) at disassembly time, but the handler reads both as plain words.
 - Focus token `0x4A` dominates (11 of 12 sites). One site uses `0x53`. Tokens correspond to entity type ids.
 - Often paired with `[22] set_interact` and `[44] solid_on` during actor init.
 - `[7E]` (`code_00B4DA`) is the natural companion: it checks `$7F1036` (the latch `[59]` clears and `code_0BE902` sets) and resumes from it. See below for deep audit.
@@ -69,7 +69,7 @@ Unlike the [tracked_ids](tracked_ids.md) family which manages the global id tabl
 - **Preferred name:** `set_focus_bind`
 - **Aliases:** `bind_focus_interact`, `set_entity_descriptor`
 - **Handler:** `code_00B4B9` @ `extracted/system/chunk_008000.asm:7378-7393`
-- **Parameters:** `Word`, `Word` — copdef condition: if byte at offset 3 has bit 7 set → `Word`, `&Code`
+- **Parameters:** `Word`, `Word` — condition: if byte at offset 3 has bit 7 set → `Word`, `&Code`
 - **Usage count:** 12
 
 ##### What it does

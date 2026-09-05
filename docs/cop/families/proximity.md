@@ -13,7 +13,7 @@ Branch when the player (or another actor) matches a geometric / facing test. Han
 - `$0BA6` / `$0BA8` — player cell X/Y (sprite −8 / −16)
 - `$0BAA` — player facing
 - `$0BB2` / `$0BB4` — coarse player cell (`>>4`)
-- `[14]`–`[16]` exist in the jump table but are unused / missing from copdef
+- `[14]`–`[16]` exist in the jump table but are unused (0 call sites)
 
 ## Family notes
 
@@ -32,9 +32,9 @@ Branch when the player (or another actor) matches a geometric / facing test. Han
 | `11` | `branch_if_rel_xy_facing` | 32 | high | Byte, Byte, Byte, &Code | `code_00A401` |
 | `12` | `branch_if_x_facing` | 5 | high | Byte, Byte, &Code | `code_00A422` |
 | `13` | `branch_if_y_facing` | 18 | high | Byte, Byte, &Code | `code_00A458` |
-| `14` | `branch_if_rel_x_facing` | 0 | high | (not in copdef; unused) | `code_00A446` |
-| `15` | `branch_if_rel_y_facing` | 0 | high | (not in copdef; unused) | `code_00A47C` |
-| `16` | `branch_if_actor_at_xy` | 0 | high | Byte×4, &Code (not in copdef; unused) | `code_00A48E` |
+| `14` | `branch_if_rel_x_facing` | 0 | high | Byte, Byte, &Code | `code_00A446` |
+| `15` | `branch_if_rel_y_facing` | 0 | high | Byte, Byte, &Code | `code_00A47C` |
+| `16` | `branch_if_actor_at_xy` | 0 | high | Byte×4, &Code | `code_00A48E` |
 
 **Family call-site total:** 308
 
@@ -548,7 +548,7 @@ All 5 call sites: `#2A,#FF`, `#11,#FF`, `#21,#FF`, `#1D,#FF`, `#0D,#03` (only on
 | Item | Value |
 |------|-------|
 | Suggested alias | `branch_if_x_facing #x, #face, &label` |
-| Relative twin | `[14]` (`code_00A446`) — unused / not in `copdef.json` |
+| Relative twin | `[14]` (`code_00A446`) — unused |
 
 - **JSR:** `code_00E510`
 - **Source examples:**
@@ -622,7 +622,7 @@ Facing mix: many `#01` (map_162 / forest), also `#FF`, rare `#00`.
 | Item | Value |
 |------|-------|
 | Suggested alias | `branch_if_y_facing #y, #face, &label` |
-| Relative twin | `[15]` (`code_00A47C`) — unused / not in `copdef.json` |
+| Relative twin | `[15]` (`code_00A47C`) — unused |
 
 - **JSR:** `code_00E510`
 - **Source examples:**
@@ -634,7 +634,7 @@ Facing mix: many `#01` (map_162 / forest), also `#FF`, rare `#00`.
 
 #### COP [14] — `branch_if_rel_x_facing` (unused)
 
-- **Confidence:** high (handler clear; **0** call sites; not in `copdef.json`)
+- **Confidence:** high (handler clear; **0** call sites)
 - **Preferred name:** `branch_if_rel_x_facing`
 - **Handler:** `code_00A446` @ `extracted/system/chunk_008000.asm:4907-4917`
 - **Parameters:** (would be) `Byte` dx, `Byte` facing, `&Code` — same epilogue as `[12]`
@@ -657,7 +657,7 @@ code_00A446 {
 
 #### COP [15] — `branch_if_rel_y_facing` (unused)
 
-- **Confidence:** high (handler clear; **0** call sites; not in `copdef.json`)
+- **Confidence:** high (handler clear; **0** call sites)
 - **Preferred name:** `branch_if_rel_y_facing`
 - **Handler:** `code_00A47C` @ `extracted/system/chunk_008000.asm:4946-4956`
 - **Parameters:** (would be) `Byte` dy, `Byte` facing, `&Code` — same epilogue as `[13]`
@@ -680,7 +680,7 @@ code_00A47C {
 
 #### COP [16] — `branch_if_actor_at_xy` (exact position of actor slot N)
 
-- **Confidence:** high (handler + `code_00E524` / `code_0480FA`; **0** call sites; not in `copdef.json`)
+- **Confidence:** high (handler + `code_00E524` / `code_0480FA`; **0** call sites)
 - **Preferred name:** `branch_if_actor_at_xy`
 - **Aliases:** `branch_if_slot_at_xy_facing`, `branch_if_actor_at_xy_facing`
 - **Handler:** `code_00A48E` @ `extracted/system/chunk_008000.asm:4958-4997`
@@ -759,7 +759,7 @@ code_00A48E {
 
 `[16]` answers “where is **actor slot N**?” — e.g. wait until a companion/NPC/object reaches a cell, or gate a cutscene on another actor’s pose. That needs a slot lookup (`×$38+$1000`) and must not clobber the caller’s `X` (hence `PHX`/`PLX`).
 
-It sits next to `[17]` (`teleport_xy_facing`) in the jump table: `[17]` **writes** `$00=$x+8`, `$02=$y`, `$0C=facing`; `[16]` **tests** the same layout on a chosen slot. Likely authored for multi-actor sync that never shipped (or was removed) — zero call sites, omitted from `copdef.json`.
+It sits next to `[17]` (`teleport_xy_facing`) in the jump table: `[17]` **writes** `$00=$x+8`, `$02=$y`, `$0C=facing`; `[16]` **tests** the same layout on a chosen slot. Likely authored for multi-actor sync that never shipped (or was removed) — zero call sites.
 
 ##### Authoring model (hypothetical)
 

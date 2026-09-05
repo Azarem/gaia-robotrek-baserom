@@ -38,7 +38,7 @@ The seven ops form a matrix across three optional features:
 | `[A7]` | child | absolute | — | `@Code, Word, Word` | 0 |
 | `[A8]` | child | absolute | Word (raw) | `@Code, Word, Word, Word` | 0 |
 
-Only `[A2]`, `[A3]`, and `[A5]` are used in practice. `[A4]`, `[A6]`, `[A7]`, `[A8]` are valid handlers but have zero call sites and are absent from `copdef.json`.
+Only `[A2]`, `[A3]`, and `[A5]` are used in practice. `[A4]`, `[A6]`, `[A7]`, `[A8]` are valid handlers but have zero call sites.
 
 ---
 
@@ -202,7 +202,7 @@ code_00C3BC:
 
 ### Usage
 
-**0 call sites.** Not in `copdef.json`. This is the child-chain equivalent of `[A2]`'s flag feature, but without the forced `#$2000` bit.
+**0 call sites.** This is the child-chain equivalent of `[A2]`'s flag feature, but without the forced `#$2000` bit.
 
 ---
 
@@ -279,7 +279,7 @@ COP [A5] ( @code_0BEA93, #$00A0, #$FF00 )
 
 ## Unused variants: `[A6]`, `[A7]`, `[A8]`
 
-Three additional child-spawn variants exist with valid handlers but zero call sites and no `copdef.json` entries.
+Three additional child-spawn variants exist with valid handlers but zero call sites.
 
 ### `[A6]` — `spawn_actor_child_offset_flags`
 
@@ -354,7 +354,7 @@ Copies the parent's core fields (`$00`–`$0C`: position, flags, facing, etc.) t
 
 4. **Absolute position** (`[A7]`/`[A8]`): These overwrite `$00`/`$02` directly (after E587 copied the parent's position), giving the child a fixed position independent of the parent.
 
-5. **Sparse usage**: Only 3 of 7 ops are used. The unused ops (`[A4]`, `[A6]`, `[A7]`, `[A8]`) represent all combinations that were implemented but never needed by game scripts. All unused ops lack `copdef.json` entries.
+5. **Sparse usage**: Only 3 of 7 ops are used. The unused ops (`[A4]`, `[A6]`, `[A7]`, `[A8]`) represent all combinations that were implemented but never needed by game scripts.
 
 6. **Relationship to `code_00E55E`**: The render chain family (`[A9]`+) uses `code_00E55E` instead of `code_00E535`. E55E links via `$0026`/`$0024` (reversed) with `$0EF6` as the chain head. This is a completely separate execution chain for rendering actors.
 

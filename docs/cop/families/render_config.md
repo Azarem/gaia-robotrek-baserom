@@ -566,7 +566,6 @@ code_00C32A {
 - **Handler:** `code_00C339` @ chunk_008000.asm:9551–9566
 - **Parameters:** (none) — would consume `$12` set by `[96]`
 - **Usage count:** 0
-- **Not in copdef.json**
 
 The multi-frame bitmap render companion to `[96]`. Loops `code_08E69B` decrementing `$12`. **Unused** — 0 call sites, matching the unused `[96]` setup op.
 

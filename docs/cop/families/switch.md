@@ -55,7 +55,7 @@ COP [2x] ( #lo, #hi, &case_lo, &case_lo+step, …, &case_hi )
 - **Preferred name:** `switch_param`
 - **Aliases:** `switch_byte`, `switch_on_04`, `branch_table_04`
 - **Handler:** `code_00A733` @ `extracted/system/chunk_008000.asm:5354-5384`
-- **Parameters:** `Byte` lo, `Byte` hi, then `(hi−lo)/2+1` × `&Code` (`copdef` conditions)
+- **Parameters:** `Byte` lo, `Byte` hi, then `(hi−lo)/2+1` × `&Code` (variable-length conditions)
 - **Usage count:** 14
 
 ##### What it does

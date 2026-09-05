@@ -9,8 +9,8 @@ Each op reads one or two Byte operands, indexes into the velocity table, and sto
 | Op | Name | Operands | Target | Uses |
 |----|------|----------|--------|-----:|
 | `B4` | `set_velocity_x` | `Byte` | `$1C` | 10 |
-| `B5` | `set_velocity_y` | `Byte` (not in copdef) | `$1E` | 0 |
-| `B6` | `set_velocity_xy` | `Byte, Byte` (not in copdef) | `$1C`, `$1E` | 0 |
+| `B5` | `set_velocity_y` | `Byte` | `$1E` | 0 |
+| `B6` | `set_velocity_xy` | `Byte, Byte` | `$1C`, `$1E` | 0 |
 
 ### Velocity table
 
@@ -108,7 +108,7 @@ code_00C762:
 
 ### Usage
 
-**0 sites.** Not in `copdef.json`. Valid handler exists but is never called. This is the Y-axis counterpart of `[B4]`.
+**0 sites.** Valid handler exists but is never called. This is the Y-axis counterpart of `[B4]`.
 
 ---
 
@@ -141,7 +141,7 @@ code_00C776:
 
 ### Usage
 
-**0 sites.** Not in `copdef.json`. Valid handler exists but is never called. This is the combined variant — functionally equivalent to `COP [B4] + COP [B5]`.
+**0 sites.** Valid handler exists but is never called. This is the combined variant — functionally equivalent to `COP [B4] + COP [B5]`.
 
 ---
 
@@ -160,7 +160,7 @@ code_00C776:
 
 2. **Inline lookup**: The velocity table lookup (`AND #$00FF; ASL; TAY; LDA unk29_list_01C3B9, Y`) is identical to `code_00E398`. B4-B6 inline it rather than calling the subroutine.
 
-3. **Sparse usage**: Only `[B4]` is used (10 sites). The Y-only (`[B5]`) and combined (`[B6]`) variants exist as valid handlers but have zero call sites and are absent from `copdef.json`. In practice, Y velocity is always set through the animation setup ops rather than independently.
+3. **Sparse usage**: Only `[B4]` is used (10 sites). The Y-only (`[B5]`) and combined (`[B6]`) variants exist as valid handlers but have zero call sites. In practice, Y velocity is always set through the animation setup ops rather than independently.
 
 4. **Velocity readback pattern**: The `actor_04BA77.asm` usage pattern (set `$1C` then immediately read it) suggests `[B4]` was also used as a general-purpose table lookup utility, not just for setting movement speed.
 

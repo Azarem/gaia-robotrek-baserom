@@ -12,7 +12,7 @@ Seven system-only opcodes used by the party member AI controller. Five are condi
 | `E6` | `branch_if_state` | Byte, &Code | Branch if `$7F0006,X` == Byte | 20 |
 | `E7` | `set_state_yield` | Byte, &Code | Set `$7F100C,X` + resume at &Code + yield | 19 |
 | `E8` | `branch_party_near` | Word, &Code | Branch if party member within distance | 90 |
-| `E9` | `branch_party_near_behind` | _(not in copdef)_ | E8 reversed facing — check from behind | 0 |
+| `E9` | `branch_party_near_behind` | Word, &Code | E8 reversed facing — check from behind | 0 |
 
 ### Entity slot arrays
 
@@ -327,7 +327,7 @@ The **most-used** op in this family (90 sites, 41%). Used at the start of party 
 
 ## `[E9]` — `branch_party_near_behind` (unused)
 
-Unused reverse-facing variant of E8. Not in copdef.json.
+Unused reverse-facing variant of E8.
 
 ### Handler: `code_00D474`
 
@@ -348,7 +348,7 @@ BEQ loc_00D445                      ; facing RIGHT → use E8's "facing left" ca
 JMP code_00D427                     ; facing LEFT → use E8's "facing right" calc
 ```
 
-This effectively measures distance from the actor's **back** rather than front. Would use the same operand layout as E8 (Word threshold + &Code target) if it were in copdef. 0 call sites.
+This effectively measures distance from the actor's **back** rather than front. Uses the same operand layout as E8 (Word threshold + &Code target). 0 call sites.
 
 ---
 

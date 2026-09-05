@@ -55,10 +55,9 @@ There is **no bounds check, no sentinel detection, and no special-case for `$7F`
 
 Slot `$7F` (`127`) sits at the boundary between the "low half" (`$00`–`$7E`) and "high half" (`$80`–`$FA`) of the opcode space. This suggests a deliberate reservation or removed feature:
 
-- **copdef.json** skips it entirely (id 127 is absent; `[7E]` is id 126, `[80]` is id 128)
 - **Jump table** uses `#$FFFF` as a sentinel — the only such entry among 251 slots
 - **No call sites** exist anywhere in the extracted ROM
-- Every other copdef-missing opcode (e.g., `[14]`–`[16]`, `[3F]`, `[40]`, `[43]`, `[4F]`, `[60]`, `[70]`) still has a valid handler in the jump table — they're merely missing from the disassembler definitions, not actually unused
+- Every other zero-use opcode (e.g., `[14]`–`[16]`, `[3F]`, `[40]`, `[43]`, `[4F]`, `[60]`, `[70]`) still has a valid handler in the jump table — they are simply unused by game scripts
 
 The most likely explanation is that `$7F` was **intentionally reserved as a dead slot** — possibly as a boundary marker between two opcode ranges, or a slot that was allocated during development but never implemented.
 
@@ -76,7 +75,7 @@ The `#$FFFF` sentinel appears frequently in **other** tables in the ROM (e.g., a
 - **Preferred name:** `unused_crash`
 - **Aliases:** `dead_slot`, `reserved_7f`
 - **Handler:** none (`#$FFFF` sentinel → crashes if dispatched)
-- **Parameters:** undefined (not in copdef.json)
+- **Parameters:** (none)
 - **Usage count:** 0
 - **Behavior:** Jumps to `$00:FFFF` (interrupt vector area), crashes
 

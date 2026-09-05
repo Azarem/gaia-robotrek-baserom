@@ -43,7 +43,7 @@ Tested via `code_00DBEF` against the `$0730` bitfield. When set, signals that th
 |----|------|-----:|------------|--------|---------|
 | `6E` | `npc_spawn_gate` | 15 | high | (none) | `code_00BA36` |
 | `6F` | `npc_idle_guard` | 14 | high | (none) | `code_00BA4B` |
-| `70` | `npc_busy_wait` | 0 | high | Byte (not in copdef) | `code_00BA82` |
+| `70` | `npc_busy_wait` | 0 | high | Byte | `code_00BA82` |
 
 **Family call-site total:** 29
 
@@ -113,7 +113,7 @@ Tested via `code_00DBEF` against the `$0730` bitfield. When set, signals that th
 
 - **Preferred name:** `npc_busy_wait`
 - **Handler:** `code_00BA82`
-- **Parameters:** Byte (delay value → `$0E`; not in copdef.json)
+- **Parameters:** Byte (delay value → `$0E`)
 - **Usage count:** 0
 
 ##### What it does

@@ -27,11 +27,11 @@ Background music queue (`$0872`/`$0870`) and SFX latch (`$0878`/`$0879` → `$AP
 | `3C` | `play_music` | 37 | high | Byte | `code_00AE64` |
 | `3D` | `play_music_fade` | 7 | high | Byte | `code_00AE91` |
 | `3E` | `restore_music` | 31 | high | Byte | `code_00AEBE` |
-| `3F` | `apu_write_0` | 0 | high | Byte (not in copdef) | `code_00AEF7` |
-| `40` | `apu_write_1` | 0 | high | Byte (not in copdef) | `code_00AF0B` |
+| `3F` | `apu_write_0` | 0 | high | Byte | `code_00AEF7` |
+| `40` | `apu_write_1` | 0 | high | Byte | `code_00AF0B` |
 | `41` | `queue_sfx_3` | 277 | high | u8 | `code_00AF1F` |
 | `42` | `queue_sfx_2` | 98 | high | u8 | `code_00AF33` |
-| `43` | `queue_sfx_word` | 0 | high | Word (not in copdef; unused) | `code_00AF47` |
+| `43` | `queue_sfx_word` | 0 | high | Word | `code_00AF47` |
 
 **Family call-site total:** 450
 

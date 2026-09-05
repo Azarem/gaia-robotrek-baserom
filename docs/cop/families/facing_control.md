@@ -69,7 +69,7 @@ LDA $0A : EOR #$8000 : STA $0A   ; toggle bit 15 (v-flip)
 
 ### Usage (0 sites)
 
-**Unused.** Not listed in `copdef.json`. Toggles bit 15 (SNES OAM vertical flip), which would invert the sprite vertically. Likely reserved for a visual effect never implemented.
+**Unused.** Toggles bit 15 (SNES OAM vertical flip), which would invert the sprite vertically. Likely reserved for a visual effect never implemented.
 
 ---
 
@@ -192,7 +192,7 @@ The **most-used** op in this family — used before every movement decision in p
 
 ## `[E2]` — `proximity_branch_toward` (unused)
 
-A proximity-based 3-way branch toward a target party member. **Not listed in `copdef.json`. 0 call sites.**
+A proximity-based 3-way branch toward a target party member. **0 call sites.**
 
 ### Handler: `code_00D241`
 
@@ -235,7 +235,7 @@ Inline layout: `Word (threshold), &Code (left), &Code (center), &Code (right)` =
 
 5. **OAM attribute bits**: Bit 14 (`#$4000`) is the SNES OAM horizontal flip. Bit 15 (`#$8000`) is the vertical flip. The high byte of `$0A` maps directly to OAM attribute byte `vhoopppc` (see [Sprite Attribute Set](sprite_attribs.md)).
 
-6. **DE/E2 unused**: Both DE and E2 exist in the jump table but have 0 call sites and are not in `copdef.json`. DE toggles vertical flip (potentially for upside-down effects); E2 implements a distance-threshold branch that was likely replaced by simpler logic.
+6. **DE/E2 unused**: Both DE and E2 exist in the jump table but have 0 call sites. DE toggles vertical flip (potentially for upside-down effects); E2 implements a distance-threshold branch that was likely replaced by simpler logic.
 
 ## Relationship to other families
 

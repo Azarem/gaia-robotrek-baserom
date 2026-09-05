@@ -374,13 +374,9 @@ code_00AA9E {
 
 So `[2E]` = `[29]`-style anim bias + `[2D]` follower logic.
 
-##### Copdef vs reality
+##### Packed epilogue
 
-`us/copdef.json` lists 11 operand bytes:
-
-`Byte, Byte, Byte, Word, Word, Word, &Code`
-
-The handler only **reads** the first four fields (`3×Byte + Word`). The trailing six bytes are the **packed epilogue** that every site emits, mis-parsed as operands:
+The handler only **reads** the first four fields (`3×Byte + Word`). The trailing six bytes are the **packed epilogue** that every site emits:
 
 | Bytes (LE) | Actual code |
 |------------|-------------|

@@ -21,7 +21,7 @@ Branch on or rewrite per-cell metatile ids in `$7EA000`, with graphics from `$7E
 
 - Subgroups: branch `[4A]`/`[4B]`; write `[4C]`/`[4D]`; draw/refresh `[4E]`/`[4F]`; row scan `[50]`.
 - `[4D]` assembler `Byte,Word` packs `dy` (lo) + `tile` (hi).
-- `[4F]` unused / missing from copdef.
+- `[4F]` unused (0 call sites).
 - `[50]` is **not** movement — jump-table neighbor `[51]` starts the walk/step family.
 
 ## Usage statistics
@@ -33,7 +33,7 @@ Branch on or rewrite per-cell metatile ids in `$7EA000`, with graphics from `$7E
 | `4C` | `set_tile` | 24 | high | Byte, Byte, Byte | `code_00B044` |
 | `4D` | `set_tile_at` | 84 | high | Byte, Word (packs dy+tile) | `code_00B05F` |
 | `4E` | `draw_tile_at` | 6 | high | Byte, Byte, Byte | `code_00B0A7` |
-| `4F` | `refresh_tile_at` | 0 | high | Byte, Byte (not in copdef; unused) | `code_00B0B1` |
+| `4F` | `refresh_tile_at` | 0 | high | Byte, Byte | `code_00B0B1` |
 | `50` | `redraw_tile_rows` | 128 | high | Byte×6 | `code_00B109` |
 
 **Family call-site total:** 272
@@ -298,7 +298,7 @@ COP [4C] ( #07, #12, #F5 )
 
 ##### Operand packing
 
-`us/copdef.json` declares `["Byte","Word"]`, but the handler reads **three bytes** via two `code_00E510` calls + one `LDA [$2C]`:
+The handler reads **three bytes** via two `code_00E510` calls + one `LDA [$2C]`; the `Byte, Word` operand layout packs `dy` (low) + `tile_id` (high) into the Word:
 
 | Assembler form | Stream bytes | Runtime |
 |----------------|--------------|---------|
@@ -467,7 +467,7 @@ Likely intentional: change appearance/collision of the shelf wall without retarg
 - **Aliases:** `redraw_tile_at`, `yield_halt` (old misnomer)
 - **Handler:** `code_00B0B1` @ `extracted/system/chunk_008000.asm:6780-6828`
 - **Parameters:** `Byte` dx, `Byte` dy — **no** tile-id operand (reads `$7EA000`)
-- **Usage count:** 0 (not in `us/copdef.json`; jump-table slot exists)
+- **Usage count:** 0
 
 ##### What it does
 
@@ -507,14 +507,12 @@ Re-applies metatile graphics and collision for whatever id is already stored —
 
 ##### Why unused
 
-- Missing from `copdef.json` → never emitted by the extractor
 - No `COP [4F]` under `extracted/**/*.asm`
 - Scripts that need a redraw either re-`[4D]`/`[4C]` or use `[4E]` with an explicit id
 
 | Item | Value |
 |------|-------|
 | Suggested alias | `refresh_tile_at #dx, #dy` |
-| Copdef | Add `"4F": { "parts": ["Byte", "Byte"] }` if re-enabling |
 
 ##### Family note (`[4C]`–`[4F]` write modes)
 

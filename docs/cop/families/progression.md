@@ -42,14 +42,14 @@ _Deep-audited ops: `[60]`, `[61]`_
 - `[60]` has **0 call sites** — the game awards EXP through the combat engine, not COP scripts. The handler is functional infrastructure that was never used by map scripts.
 - `[61]` is exclusively used in **treasure chest** actors (type `#69`, spawn `#80`). Each chest checks a specific level threshold before dispensing its reward.
 - Level values in `[61]` operands range from `#01` to `#50` (1–80 decimal), progressing across 35 chests.
-- `[60]` is absent from `copdef.json` (ID 96 skipped); `[61]` is ID 97 with `[Byte, &Code]`.
+- `[61]` takes `[Byte, &Code]`.
 - Branch polarity of `[61]`: level ≥ threshold → **goto `&Code`**; level < threshold → fall through.
 
 ## Usage statistics
 
 | Op | Name | Uses | Confidence | Params | Handler |
 |----|------|-----:|------------|--------|---------|
-| `60` | `award_exp` | 0 | high | Word (not in copdef) | `code_00B5D2` |
+| `60` | `award_exp` | 0 | high | Word | `code_00B5D2` |
 | `61` | `branch_if_level_ge` | 35 | high | Byte, &Code | `code_00B61C` |
 
 **Family call-site total:** 35
