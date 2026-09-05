@@ -387,7 +387,7 @@ Addresses below are those most frequently touched by COP handlers and actor scri
 | `$0876` | Music/DMA busy latch — when ≠0, NMI skips SFX port drain | Set during track upload; cleared when load finishes |
 | `$0878` / `$0879` | **SFX latch word** (lo/hi) — NMI copies to `$APUIO2`/`$APUIO3` then `STZ` | `[42]` lo / `[41]` hi / `[43]` word; helpers `code_00FED2`/`code_00FECA` |
 | `$0EEC` | Last choice index (×2 → `&&Code` list) for `[1C]`/`[1E]` |
-| `$06` | Actor/engine flags (`TSB`/`TRB`, e.g. `#$2000` interaction) |
+| `$06` | Actor/engine flags — see `$06` bit table below |
 | `$00` / `$02` | Actor sprite X / Y (`≈ cell+8` / `≈ cell+16`) |
 | `$04` | Actor instance / spawn param — also **focus id** when set by `[32]` (`#$01xx`) | `COP [25]` switch; `[32]` + `$0B70` |
 | `$22` | Actor-local counter / mode — `COP [26]` switch; scripts `INC`/`STZ` |
@@ -515,25 +515,213 @@ Top `$7Fxxxx` refs in actor/script ASM:
 
 Handlers `JSR $&code_00DBEF` (test) and `JSR $&code_00DBBD` (set/clear) against **`$0730+`**. Full word encoding, polarity, and authoring cheat sheet: see [Event flags — Shared reference](families/event_flags.md#shared-reference).
 
+### Actor `$06` flag bits
 
-## COP dispatch
+The per-actor `$06` word controls scheduling, rendering, interaction, and lifecycle. Bits are set/cleared by COP handlers and the engine via `TSB $06` / `TRB $06`.
+
+| Bit | Mask | Name (inferred) | Role |
+|----:|------|-----------------|------|
+| 0 | `#$0001` | Active/counted | Counted by `code_00E6A6` into `$005A`/`$005C`; party/interaction helpers |
+| 5 | `#$0020` | Pad dispatch C | `[37]` routes to handler slot `$0014` |
+| 6 | `#$0040` | Pad dispatch B | `[37]` routes to handler slot `$0012` |
+| 7 | `#$0080` | Parent death flag | `[FA]` checks parent `$0006 bit #$0080` to trigger child self-destruct |
+| 8 | `#$0100` | Pad dispatch A | `[37]` routes to handler slot `$000E` |
+| 9 | `#$0200` | Interaction-capable | Enables `code_00F501` proximity scan after tick; throttled by `$097A` in render phase |
+| 10 | `#$0400` | Secondary party member | Spawn path calls `code_00F9BD` for camera clamp; party AI/proximity system |
+| 11 | `#$0800` | Render-chain actor | Required for `code_00E71C` render phase; set by `[A9]`–`[B1]` spawn and render COPs |
+| 12 | `#$1000` | Velocity/post-tick select | Paired with bit 13; selects alternate post-resume path in scheduler |
+| 13 | `#$2000` | Spawned/script-active | Set by `code_00E587` on all spawns; forced by `[A2]`; gates the resume path in scheduler |
+| 14 | `#$4000` | Off-screen/interaction-busy | Set by render cull (`code_00E846`) when off-screen; `[6F]`/`[71]`/`[9A]` test it; cleared when on-screen |
+| 15 | `#$8000` | UI-focus/negative class | Negative `$06` → `code_00E7E8` focus path; general tick skips these actors |
+
+
+## Execution model
+
+### Tick loop & scheduling
+
+Actors are traversed **head → tail** (`$0EF4` → `$26` links) each frame. There is a single doubly-linked chain, not separate chains. The scheduler runs multiple **phases** per frame, each walking the chain with different `$06` filter masks:
+
+| Phase | Routine | `$06` filter | Purpose |
+|-------|---------|-------------|---------|
+| Render tick | `code_00E71C` | bit `#$0800` required | Render-chain actors (spritemaps, DMA) |
+| General tick | `code_00E62D` | skip if bit 15 set | Main script execution for all non-UI actors |
+| Counter pass | `code_00E6A6` | bit `#$0001` | Counts active actors into `$005A`/`$005C` |
+| UI-focus tick | `code_00E7E8` | bit 15 required + `$0B70 == $04` | UI overlay actors; focus mismatch → self-destruct |
+| Render cull | `code_00E846` | walks tail → head | Marks off-screen actors `$06 |= #$4000`, on-screen `$06 &= ~#$4000` |
+
+All script phases share the same per-actor tick:
+
+```
+TAX; TCD            ; DP = actor slot
+LDA $06 → filter   ; phase-specific skip logic
+DEC $0E             ; delay counter
+BPL skip_resume     ; still sleeping → skip
+STZ $0E
+push $2A, ($28-1)   ; fake RTL return address
+RTL                 ; enter script at saved resume point
+```
+
+**Cooperative multitasking**: each actor runs until it **yields** (handler returns `PLA PLA RTL` to the scheduler). There is no preemption within a phase.
+
+**Execution priority**: first-spawned scene actors sit at `$0EF4` (head) and run first. `[A2]` head-insert gives highest priority (system overlays, screen effects). `[AA]`/`[AD]` tail-append gives lowest priority (child rendering actors).
+
+### Delay counter (`$0E`)
+
+| `$0E` value | Effect |
+|-------------|--------|
+| 0 | Actor runs this frame |
+| N > 0 | Skipped for N frames, then runs |
+
+Set by `[D0]`/`[CD]`; cleared by `[CE]`/`[CF]`; unchanged by `[CB]`/`[CC]`. The scheduler decrements `$0E` every frame for every actor in the chain.
+
+### COP dispatch
 
 ```
 code_009EE8:  ; COP entry
   REP #$20
   TXY                    ; X/Y = actor slot
   ...
-  LDA [$2C]              ; read opcode
-  INC $2C
-  ASL : TAX
+  LDA [$2C]              ; read opcode byte
+  INC $2C                ; advance script pointer past opcode
+  AND #$00FF
+  ASL : TAX              ; opcode × 2 → jump table index
   JMP (code_list_009F10, X)
 ```
 
-Helpers:
+### Handler epilogue conventions
 
-- `code_009F00` — skip 2 operand bytes and continue
+Handlers exit via one of two conventions:
+
+| Epilogue | Mnemonic | Effect |
+|----------|----------|--------|
+| `STA $02,S` / `RTI` | **Continue** | Script pointer patched on stack; interpreter continues to next COP in the same tick |
+| `PLA` / `PLA` / `RTL` | **Yield** | Returns to scheduler; actor sleeps until next frame (or until `$0E` reaches 0) |
+
+Rule of thumb: **setup/branch/mutate → RTI (continue)**; **wait/poll/block → yield**.
+
+Skip helpers for branch-not-taken paths:
+- `code_009F00` — skip 2 operand bytes (Word or `&Code`) and continue
 - `code_009F07` — skip 4 operand bytes and continue
-- Handlers end with `RTI` (continue interpreter) or `PLA PLA RTL` (yield/halt actor tick)
+
+### Operand reading convention
+
+Handlers consume operands sequentially from the script stream at `[$2C]`:
+
+| Type | Size | Read pattern | Examples |
+|------|-----:|--------------|---------|
+| **Byte** | 1 | `LDA [$2C]; INC $2C` (uses low byte) | anim ID, facing, mode flags |
+| **Word** | 2 | `LDA [$2C]; INC $2C; INC $2C` | flag IDs, delays, counters |
+| **`&Code`** | 2 | Same as Word | Same-bank branch target → `STA $02,S; RTI` |
+| **`@Code`** | 3 | Three sequential byte reads | Far pointer → `$28`/`$2A` |
+| **Address** | 3 | Three byte reads (bank + word) | Spritemap pointers, bitmap addresses |
+
+Conditional branches read operands only on the taken path; the not-taken path uses `code_009F00`/`code_009F07` to skip the right number of bytes.
+
+### NMI / VBlank pipeline
+
+The NMI handler (`code_0BFB43`) runs each VBlank:
+
+1. Scroll registers + OAM DMA
+2. `$0EE2` bit `#$10`: tile upload queue drain from `$0E4E` → VRAM
+3. `$0EE2` bit `#$08`: font/bitmap buffer DMA from `$7FF800`
+4. General DMA queue drain; clears `$0EE2` bits `#$06`
+5. VRAM stack drain; **`STZ $095E`** (clears tile-write queue cursor)
+6. Layer/mode register restore from `$05A0`–`$05A4`
+7. Pad poll (`$0566`/`$0568`)
+8. **SFX latch drain**: if `$0876 == 0` (no music loading), copies `$0878` → `$APUIO2` on even frames, then `STZ $0878`
+9. Frame counters `INC $30` / `INC $32`
+
+Tile-write COPs (`[4C]`–`[50]`) back-pressure when `$095E ≥ $80` — they yield instead of queueing, preventing queue overflow.
+
+
+## Scripting conventions
+
+### Combinatorial opcode encoding
+
+Many COP families use **sequential opcode numbers** to encode optional operand dimensions. The programmer selects the opcode variant matching which trailing operands are needed.
+
+| Family | Encoding | Bits/dimensions |
+|--------|----------|-----------------|
+| Anim setup `[80]`–`[87]` | 3-bit: `(speed)(vx)(vy)` | `[80]`=none, `[84]`=speed, `[85]`=speed+vx, `[87]`=all |
+| Script yield `[CB]`–`[D0]` | 2×2: resume source × yield + delay | `[CB]`=save+continue, `[CC]`=save+yield, `[D0]`=save+delay+yield |
+| Main spawn `[A2]`–`[A8]` | chain × position × flags | `[A2]`=head, `[A3]`=child, `[A5]`=child+offset, etc. |
+| Render spawn `[A9]`–`[B1]` | chain × position × flags × counter | 9 variants; `[AD]`=facing offset, `[AE]`=facing+flags |
+| Party swap `[ED]`–`[F0]` | direction × phase | `[ED]`=prev/start, `[EF]`=prev/exec, `[EE]`=next/start, `[F0]`=next/exec |
+
+Unused combinations still have valid handlers (e.g., `[A4]`/`[A6]`/`[A7]`/`[A8]` have 0 call sites but working code).
+
+### Common opcode sequences
+
+These multi-opcode patterns are conventions, not enforced by the engine:
+
+**NPC initialization triad** (251 actors):
+```asm
+COP [44]                    ; solid_on — occupy tile
+COP [22] ( &handler )       ; set_interact — register talk script
+COP [63] ( &idle_loop )     ; wait_facing — yield until player faces NPC
+```
+
+**Idle loop** (109 actors use this 4-COP cycle):
+```asm
+idle:
+    COP [CB]                ; mark_resume — save loop head as resume point
+    COP [63] ( &idle )      ; wait_facing — yield until player approaches
+    COP [80] ( #XX )        ; set_anim — play idle animation
+    COP [97]                ; wait_anim_done — yield until animation completes
+    BRA idle
+```
+
+**Step bracket** (662 sites, always `[51]` → animation → `[52]`):
+```asm
+COP [53] ( #XX, #YY, #ZZ ) ; walk_to_x (or [54]/[55]/[28])
+COP [51]                    ; step_begin — mark solid, set step flag
+COP [97]                    ; wait_anim_done (or [98] for multi-frame)
+COP [52]                    ; step_end — clear solid, clear step flag
+```
+
+**Animation dyad** (1,245 / 1,247 `[80]` sites):
+```asm
+COP [80] ( #XX )            ; set_anim
+COP [97]                    ; wait_anim_done (immediate — nearly always adjacent)
+```
+
+**Smooth move trio** (42 sites, always in order):
+```asm
+COP [DA] ( mode, offset )  ; calc_target_pos (optional — fills $34/$36)
+COP [DB] ( anim, steps )   ; setup_smooth_move
+COP [DC]                    ; exec_smooth_move (per-frame tick)
+```
+
+**Party swap pair** (67 sites each, always immediate):
+```asm
+COP [ED] ( &completion )    ; swap_prev_start (or [EE] for next)
+COP [EF]                    ; swap_prev_exec (or [F0] for next)
+```
+
+### System-only vs general-use opcodes
+
+**76 opcodes** (30%) appear exclusively in system files (`chunk_038000.asm`, `chunk_048000.asm`, `actor_04B*.asm`). The remaining **175** appear in regular map actor files across multiple ROM banks.
+
+System-only ranges:
+- **`D7`–`FA`** (entire party/player subsystem) — exclusively in `chunk_038000.asm` and system actors
+- **`BE`–`C4`** (player move response + screen edge) — player host only
+- **`65`–`67`** (menus/save) — system-level invocations
+- **`8D`/`8E`/`91`–`96`/`9D`–`9F`** (child sprite, render config) — cutscene directors and system helpers
+
+General-use workhorses (8+ ROM banks):
+- `[97]` `[1D]` `[80]` `[0A]` `[0B]` `[D0]` `[CB]` `[51]` `[52]` `[44]` `[22]` — the core NPC/cutscene toolkit
+
+### Family boundaries by convention
+
+Beyond jump-table adjacency, families are distinguished by:
+
+| Convention | Examples |
+|-----------|----------|
+| **Shared WRAM** | `[CB]`–`[D0]` all write `$28`/`$2A`/`$0E`; `[BA]`–`[BD]` all write `$30` |
+| **Shared helper functions** | `[DD]`–`[E1]` share `code_04FC71` epilogue; `[E3]`–`[E9]` share party member lookup tables |
+| **Combinatorial encoding** | `[80]`–`[87]` are bit-variants of the same operation |
+| **Paired opcodes** | `[51]`/`[52]` bracket, `[EB]`/`[EC]` start/tick, `[ED]`/`[EF]` phase pair |
+| **Non-adjacent grouping** | `[59]` + `[7E]` share focus/interact binding despite 37 opcodes apart; `[91]`–`[96]` + `[9D]`–`[A1]` share render subsystem despite `[97]`–`[9C]` interruption |
 
 
 ## Actor model
