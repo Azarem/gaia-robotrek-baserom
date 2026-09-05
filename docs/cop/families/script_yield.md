@@ -1,6 +1,6 @@
-# Script Yield / Resume (`[CB]`–`[CF]`)
+# Script Yield / Resume (`[CB]`–`[D0]`)
 
-Five opcodes that control actor script scheduling by saving resume points and optionally yielding the actor's time slice. All operate on the same two fields: `$28`/`$2A` (saved script resume pointer) and `$0E` (delay counter).
+Six opcodes that control actor script scheduling by saving resume points and optionally yielding the actor's time slice. All operate on the same two fields: `$28`/`$2A` (saved script resume pointer) and `$0E` (delay counter).
 
 ## Overview
 
@@ -15,13 +15,14 @@ When the actor scheduler ticks an actor, it checks `$0E`. If nonzero, it decreme
 | `CD` | `yield_to_delay` | @Code | yes (RTL) | Word → `$0E` | 6 |
 | `CE` | `yield_to` | @Code | yes (RTL) | 0 | 7 |
 | `CF` | `set_resume` | @Code | no (RTI) | 0 | 151 |
+| `D0` | `delay_frames` | current PC | yes (RTL) | Word → `$0E` | 762 |
 
 Two dimensions define the variants:
 
 1. **Resume source**: *current PC* (the instruction following the COP) vs *explicit @Code operand* (a far address)
 2. **Yield**: *yes* (RTL — actor gives up its time slice) vs *no* (RTI — script continues immediately)
 
-A third axis, delay, only appears in `[CD]`. The closely related `COP [D0]` (`delay_frames`) covers the "current PC + yield + delay" combination.
+A third axis, delay, appears in `[CD]` and `[D0]`.
 
 ---
 
@@ -246,6 +247,54 @@ code_05C5F6:
 
 ---
 
+## `[D0]` — `delay_frames`
+
+Reads a frame delay, saves the current script position as resume, and yields. The actor sleeps for the specified number of frames.
+
+### Handler: `code_00CB9D`
+
+```
+TYX
+LDA [$2C] : INC $2C : INC $2C    ; read Word
+STA $0E                            ; delay counter
+LDA $2E : STA $2A                 ; save current bank → resume bank
+LDA $2C : STA $28                 ; save current PC → resume address
+PLA : PLA : RTL                    ; yield
+```
+
+### Operands
+
+| Part | Size | Meaning |
+|------|------|---------|
+| `Word` | 2 bytes | Delay in frames before resuming |
+
+### Usage pattern (762 sites)
+
+The **second-most-used** op in this family and the most common way to pause an actor. Delay values are in frames (60 fps):
+
+| Value | Frames | Time | Count |
+|-------|-------:|------|------:|
+| `#$003C` | 60 | 1.0 s | 126 |
+| `#$001E` | 30 | 0.5 s | 110 |
+| `#$0078` | 120 | 2.0 s | 71 |
+| `#$0020` | 32 | 0.5 s | 57 |
+| `#$0010` | 16 | 0.3 s | 45 |
+| `#$0168` | 360 | 6.0 s | 42 |
+| `#$01A4` | 420 | 7.0 s | 31 |
+| `#$0002` | 2 | 0.03 s | 28 |
+
+The most common delays are 0.5–2 seconds — typical for NPC idle pauses, event timing, and cutscene beats. Very short delays (2–4 frames) are used for animation synchronization.
+
+### Source examples
+
+| File | Call | Context |
+|------|------|---------|
+| `actor_04B422.asm:14` | `COP [D0] ( #$00FA )` | World map: wait 250 frames (~4 s) |
+| `actor_08C293.asm:12` | `COP [D0] ( #$0020 )` | Rocket takeoff: wait 32 frames |
+| `actor_06EA31.asm:14` | `COP [D0] ( #$003C )` | Mansion: wait 60 frames (1 s) |
+
+---
+
 ## Usage statistics
 
 | Op | Name | Uses |
@@ -255,29 +304,32 @@ code_05C5F6:
 | `CD` | `yield_to_delay` | 6 |
 | `CE` | `yield_to` | 7 |
 | `CF` | `set_resume` | 151 |
-| | **Total** | **1301** |
+| `D0` | `delay_frames` | 762 |
+| | **Total** | **2063** |
 
 ## Actor fields
 
 | Field | Role | Modified by |
 |-------|------|-------------|
-| `$28` / `$2A` | **Saved resume pointer** (16-bit address / 8-bit bank). The scheduler jumps here when the actor's tick arrives and `$0E == 0`. | All five: CB/CC save current PC; CD/CE/CF save @Code operand |
-| `$0E` | **Delay counter**. Decremented each tick; actor skipped while nonzero. | CD sets from Word; CE/CF clear to 0; CB/CC leave unchanged |
-| `$2C` / `$2E` | **Current script pointer** (live PC / bank). Read by CB/CC to save as resume point. | Not modified by these ops (read only) |
+| `$28` / `$2A` | **Saved resume pointer** (16-bit address / 8-bit bank). The scheduler jumps here when the actor's tick arrives and `$0E == 0`. | All six: CB/CC/D0 save current PC; CD/CE/CF save @Code operand |
+| `$0E` | **Delay counter**. Decremented each tick; actor skipped while nonzero. | CD/D0 set from Word; CE/CF clear to 0; CB/CC leave unchanged |
+| `$2C` / `$2E` | **Current script pointer** (live PC / bank). Read by CB/CC/D0 to save as resume point. | Not modified by these ops (read only) |
 
 ## Family notes
 
-1. **Yield = RTL**: All yielding variants (CC, CD, CE) exit via `PLA : PLA : RTL`. The double PLA removes the COP handler's stack frame (the RTI return address), and RTL returns to the actor scheduler. The non-yielding variants (CB, CF) use `STA $02,S : RTI` which sets the return address and continues the script.
+1. **Yield = RTL**: All yielding variants (CC, CD, CE, D0) exit via `PLA : PLA : RTL`. The double PLA removes the COP handler's stack frame (the RTI return address), and RTL returns to the actor scheduler. The non-yielding variants (CB, CF) use `STA $02,S : RTI` which sets the return address and continues the script.
 
-2. **CB vs CC dominance**: CB (744) and CC (393) together account for 87% of this family. Most scripts only need "save here + continue" and "save here + yield". The @Code variants (CD/CE/CF) are used for more structured control flow — loop entry points, phase transitions, and timed jumps.
+2. **D0 is the most common yield**: D0 (762) is the single most-used opcode in this family, ahead of even CB (744). Together with CB and CC, the three "current PC" variants account for 92% of the family.
 
-3. **Relationship to `COP [D0]`**: `[D0]` (`delay_frames`) is the "current PC + Word delay + yield" combination — it reads a Word into `$0E`, saves the current PC to `$28`/`$2A`, and yields. This completes the combinatorial grid. Together with CB–CF, the six opcodes cover all practical combinations of {resume source} × {yield} × {delay}.
+3. **Complete combinatorial grid**: The six opcodes CB–D0 cover all practical combinations of {resume source} × {yield} × {delay}. The only "missing" slot — @Code + no yield + delay — has no practical use case (setting a future resume point with delay but continuing current execution is contradictory).
 
 4. **CB + native RTL pattern**: CB is often used in render loops where the actor runs native 65816 code that may RTL at any point. The CB at the top of the loop ensures the resume point is current. Without it, an RTL yield would resume at an old (stale) position.
 
 5. **CF + RTL = "goto far"**: CF followed by RTL effectively becomes a far goto — the script sets the resume point to @Code, then immediately yields. The net effect is that next tick, the actor begins at @Code. This is why the monolith previously named CF `goto_far`.
 
-6. **$0E interaction**: CB and CC do not touch `$0E`. This means scripts can set a delay (via D0 or native `STA $0E`) and then use CC to yield with that delay active. CD explicitly sets `$0E`; CE and CF explicitly clear it to 0.
+6. **$0E interaction**: CB and CC do not touch `$0E`. This means scripts can set a delay (via D0 or native `STA $0E`) and then use CC to yield with that delay active. CD and D0 explicitly set `$0E` from their Word operand; CE and CF explicitly clear it to 0.
+
+7. **D0 + CC common pairing**: A frequent pattern is `COP [D0] ( #$XXXX )` to set the delay, followed later by `COP [CC]` to yield. D0 combines the delay-set and yield into one instruction, making it the preferred "sleep" command.
 
 ## Relationship to other families
 
